@@ -1,166 +1,154 @@
-# ReSukiSU KPM for WSA x86_64
+# ReSukiSU plus SUSFS for WSA x86_64
 
 Author and maintainer: Ognisty321
 
-This branch contains a tested ReSukiSU KPM runtime for Windows Subsystem for Android on x86_64.
+This repository provides a Windows Subsystem for Android kernel build with ReSukiSU, SUSFS and x86_64 KPM support.
 
-Start here:
+The base goal is a usable ReSukiSU kernel for WSA 2407 style x86_64 builds. On top of that, this fork adds the missing x86_64 KPM runtime so ReSukiSU Manager can use KPM on WSA instead of only showing the normal root and SUSFS features.
 
-1. `README_WSA_X86_64_KPM.md`
-2. `KernelSU/docs/WSA_X86_64_KPM.md`
+The public ReSukiSU and SukiSU KPM flow was designed around ARM64 KernelPatch payloads. WSA uses an x86_64 Linux kernel, so enabling `CONFIG_KPM=y` was not enough. The ARM64 `kpimg` and `kptools` path could not patch the WSA `bzImage`, could not load x86_64 KPM objects and could not provide an x86_64 inline hook backend. This fork fills that WSA x86_64 gap directly in the kernel tree.
 
-Tested release:
+## Current Release
 
-1. Kernel build `#20`
-2. KPM version `ReSukiSU-x86_64-KPM-loader/0.20`
-3. SHA256 `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
+1. Release: `wsa-x86_64-kpm-v0.20`
+2. Kernel: `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+`
+3. Build: `#20`
+4. Architecture: `x86_64`
+5. KPM version: `ReSukiSU-x86_64-KPM-loader/0.20`
+6. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
 
-# How do I submit patches to Android Common Kernels
+Release download:
 
-1. BEST: Make all of your changes to upstream Linux. If appropriate, backport to the stable releases.
-   These patches will be merged automatically in the corresponding common kernels. If the patch is already
-   in upstream Linux, post a backport of the patch that conforms to the patch requirements below.
-   - Do not send patches upstream that contain only symbol exports. To be considered for upstream Linux,
-additions of `EXPORT_SYMBOL_GPL()` require an in-tree modular driver that uses the symbol -- so include
-the new driver or changes to an existing driver in the same patchset as the export.
-   - When sending patches upstream, the commit message must contain a clear case for why the patch
-is needed and beneficial to the community. Enabling out-of-tree drivers or functionality is not
-not a persuasive case.
-
-2. LESS GOOD: Develop your patches out-of-tree (from an upstream Linux point-of-view). Unless these are
-   fixing an Android-specific bug, these are very unlikely to be accepted unless they have been
-   coordinated with kernel-team@android.com. If you want to proceed, post a patch that conforms to the
-   patch requirements below.
-
-# Common Kernel patch requirements
-
-- All patches must conform to the Linux kernel coding standards and pass `scripts/checkpatch.pl`
-- Patches shall not break gki_defconfig or allmodconfig builds for arm, arm64, x86, x86_64 architectures
-(see  https://source.android.com/setup/build/building-kernels)
-- If the patch is not merged from an upstream branch, the subject must be tagged with the type of patch:
-`UPSTREAM:`, `BACKPORT:`, `FROMGIT:`, `FROMLIST:`, or `ANDROID:`.
-- All patches must have a `Change-Id:` tag (see https://gerrit-review.googlesource.com/Documentation/user-changeid.html)
-- If an Android bug has been assigned, there must be a `Bug:` tag.
-- All patches must have a `Signed-off-by:` tag by the author and the submitter
-
-Additional requirements are listed below based on patch type
-
-## Requirements for backports from mainline Linux: `UPSTREAM:`, `BACKPORT:`
-
-- If the patch is a cherry-pick from Linux mainline with no changes at all
-    - tag the patch subject with `UPSTREAM:`.
-    - add upstream commit information with a `(cherry picked from commit ...)` line
-    - Example:
-        - if the upstream commit message is
-```
-        important patch from upstream
-
-        This is the detailed description of the important patch
-
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
-```
->- then Joe Smith would upload the patch for the common kernel as
-```
-        UPSTREAM: important patch from upstream
-
-        This is the detailed description of the important patch
-
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
-
-        Bug: 135791357
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        (cherry picked from commit c31e73121f4c1ec41143423ac6ce3ce6dafdcec1)
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
+```text
+https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20
 ```
 
-- If the patch requires any changes from the upstream version, tag the patch with `BACKPORT:`
-instead of `UPSTREAM:`.
-    - use the same tags as `UPSTREAM:`
-    - add comments about the changes under the `(cherry picked from commit ...)` line
-    - Example:
-```
-        BACKPORT: important patch from upstream
+## Project Features
 
-        This is the detailed description of the important patch
+1. WSA 5.15.104 x86_64 kernel base.
+2. ReSukiSU integration.
+3. SUSFS integration.
+4. KPM enabled as a working x86_64 runtime, not only a config flag.
+5. Tested release artifact for users who do not want to rebuild the kernel.
+6. Public build and install documentation without machine specific paths.
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
+## KPM Port Details
 
-        Bug: 135791357
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        (cherry picked from commit c31e73121f4c1ec41143423ac6ce3ce6dafdcec1)
-        [joe: Resolved minor conflict in drivers/foo/bar.c ]
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+1. Android x86_64 `ksud kpm` command path enabled for ReSukiSU Manager.
+2. x86_64 `ET_REL` KPM loader added with `.kpm.info`, `.kpm.init`, `.kpm.exit`, optional `.kpm.ctl0` and optional `.kpm.ctl1`.
+3. x86_64 RELA relocation support added for common kernel style KPM objects.
+4. KernelPatch style compatibility symbols added for memory helpers, symbol lookup, hotpatch, inline hook, function pointer hook, `hook_wrap` and `fp_hook_wrap`.
+5. x86_64 inline hook trampoline backend added with RIP relative instruction relocation.
+6. Normal in range inline hook install and restore use the kernel `text_poke_bp()` INT3 patching mechanism.
+7. Generated trampoline and wrapper code uses `RW+NX` and `ROX` executable memory transitions.
+8. Tasks RCU synchronization is used before generated executable buffers are freed.
+9. Unsafe or conflicting hook targets owned by ftrace, kprobes, alternatives, jump labels or static calls are refused.
 
-## Requirements for other backports: `FROMGIT:`, `FROMLIST:`,
+## Why This Port Exists
 
-- If the patch has been merged into an upstream maintainer tree, but has not yet
-been merged into Linux mainline
-    - tag the patch subject with `FROMGIT:`
-    - add info on where the patch came from as `(cherry picked from commit <sha1> <repo> <branch>)`. This
-must be a stable maintainer branch (not rebased, so don't use `linux-next` for example).
-    - if changes were required, use `BACKPORT: FROMGIT:`
-    - Example:
-        - if the commit message in the maintainer tree is
-```
-        important patch from upstream
+WSA is x86_64.
 
-        This is the detailed description of the important patch
+Most existing KPM support in ReSukiSU, SukiSU and KernelPatch related projects assumes ARM64. The ARM64 flow uses ARM64 image parsing, ARM64 branch patching, ARM64 relocation handling and ARM64 cache maintenance. That does not apply to the WSA kernel.
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
-```
->- then Joe Smith would upload the patch for the common kernel as
-```
-        FROMGIT: important patch from upstream
+This project does not emulate ARM64 KPM modules. It provides an x86_64 KPM host so x86_64 aware KPM modules can be built and tested for WSA.
 
-        This is the detailed description of the important patch
+## Compatibility
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
+1. ARM64 `.kpm` binaries do not load on this x86_64 kernel.
+2. KPMs with source code can be ported when they avoid ARM64 assembly, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helper assumptions.
+3. Direct syscall hook wrappers are exported for compatibility, but install calls intentionally return `EOPNOTSUPP` in this release.
+4. The tested target is WSA 2407 style `5.15.104` x86_64. Other WSA releases need their own validation.
 
-        Bug: 135791357
-        (cherry picked from commit 878a2fd9de10b03d11d2f622250285c7e63deace
-         https://git.kernel.org/pub/scm/linux/kernel/git/foo/bar.git test-branch)
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+## Validation
 
+The tested build passed:
 
-- If the patch has been submitted to LKML, but not accepted into any maintainer tree
-    - tag the patch subject with `FROMLIST:`
-    - add a `Link:` tag with a link to the submittal on lore.kernel.org
-    - add a `Bug:` tag with the Android bug (required for patches not accepted into
-a maintainer tree)
-    - if changes were required, use `BACKPORT: FROMLIST:`
-    - Example:
-```
-        FROMLIST: important patch from upstream
+1. Basic KPM load, info, control and unload.
+2. Hotpatch and function pointer hook capability checks.
+3. Inline hook install, trampoline call and restore checks.
+4. `hook_wrap` and `fp_hook_wrap` checks.
+5. x86_64 instruction relocation checks.
+6. Malformed `.kpm.info` rejection.
+7. Unsupported syscall hook rejection.
+8. `500` loops across `5` capability modules, for `2500` load, control and unload cycles.
+9. Final `kpm num = 0`.
+10. Kernel log check clean for kernel `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcode reports and use after free reports.
 
-        This is the detailed description of the important patch
+The stock WSA config used here does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`, `CFI` or `FineIBT`. Those rows require a separate debug kernel.
 
-        Signed-off-by: Fred Jones <fred.jones@foo.org>
+## Repository Layout
 
-        Bug: 135791357
-        Link: https://lore.kernel.org/lkml/20190619171517.GA17557@someone.com/
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
-```
+1. `README_WSA_X86_64_KPM.md` contains the WSA build and install guide.
+2. `KernelSU` points to the matching ReSukiSU branch for this port.
+3. `KernelSU/docs/WSA_X86_64_KPM.md` documents the ReSukiSU loader side.
+4. `KernelSU/kernel/kpm/kpm_loader_x86_64.c` contains the main x86_64 KPM loader implementation.
+5. `fs/susfs.c` and `include/linux/susfs*.h` contain the SUSFS integration.
 
-## Requirements for Android-specific patches: `ANDROID:`
+## Build
 
-- If the patch is fixing a bug to Android-specific code
-    - tag the patch subject with `ANDROID:`
-    - add a `Fixes:` tag that cites the patch with the bug
-    - Example:
-```
-        ANDROID: fix android-specific bug in foobar.c
+Clone with submodules:
 
-        This is the detailed description of the important fix
-
-        Fixes: 1234abcd2468 ("foobar: add cool feature")
-        Change-Id: I4caaaa566ea080fa148c5e768bb1a0b6f7201c01
-        Signed-off-by: Joe Smith <joe.smith@foo.org>
+```bash
+git clone --recurse-submodules https://github.com/Ognisty321/WSA-Linux-Kernel.git
+cd WSA-Linux-Kernel
+git checkout main
+git submodule update --init --recursive
 ```
 
-- If the patch is a new feature
-    - tag the patch subject with `ANDROID:`
-    - add a `Bug:` tag with the Android bug (required for android-specific features)
+Build:
+
+```bash
+make ARCH=x86_64 LLVM=1 -j"$(nproc)" bzImage
+```
+
+The output kernel image is:
+
+```text
+arch/x86/boot/bzImage
+```
+
+## Install
+
+Use the unpacked WSA directory on your own machine. In the examples below, replace `C:\Path\To\WSA` with your WSA directory.
+
+PowerShell:
+
+```powershell
+$WsaDir = "C:\Path\To\WSA"
+$KernelImage = "C:\Path\To\WSA-Linux-Kernel\arch\x86\boot\bzImage"
+
+Copy-Item -Force "$WsaDir\Tools\kernel" "$WsaDir\Tools\kernel.backup"
+Copy-Item -Force $KernelImage "$WsaDir\Tools\kernel"
+Add-AppxPackage -ForceApplicationShutdown -ForceUpdateFromAnyVersion -Register "$WsaDir\AppxManifest.xml"
+```
+
+Verify:
+
+```powershell
+adb connect 127.0.0.1:58526
+adb shell uname -a
+```
+
+Expected KPM version:
+
+```text
+ReSukiSU-x86_64-KPM-loader/0.20
+```
+
+## KPM Build Notes
+
+KPM modules should be built as x86_64 non PIC RELA objects. A working baseline is:
+
+```text
+-mcmodel=kernel -mno-red-zone -mno-sse -mno-mmx -mno-avx -fno-jump-tables -fcf-protection=none -mretpoline-external-thunk -fno-pic -fno-plt -fno-common
+```
+
+## Branches
+
+1. `main` is the public default branch for this WSA x86_64 ReSukiSU, SUSFS and KPM port.
+2. `wsa-x86_64-kpm` is kept as a named development branch for the same port line.
+3. The `KernelSU` submodule follows `Ognisty321/ReSukiSU` on the matching branch.
+
+## Credits
+
+This work builds on Microsoft WSA Linux Kernel, ReSukiSU, KernelSU, SukiSU related research, SUSFS and the Linux x86 text patching infrastructure.
