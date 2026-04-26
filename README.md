@@ -1,3 +1,20 @@
+# ReSukiSU KPM for WSA x86_64
+
+Author and maintainer: Ognisty321
+
+This branch contains a tested ReSukiSU KPM runtime for Windows Subsystem for Android on x86_64.
+
+Start here:
+
+1. `README_WSA_X86_64_KPM.md`
+2. `KernelSU/docs/WSA_X86_64_KPM.md`
+
+Tested release:
+
+1. Kernel build `#20`
+2. KPM version `ReSukiSU-x86_64-KPM-loader/0.20`
+3. SHA256 `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
+
 # How do I submit patches to Android Common Kernels
 
 1. BEST: Make all of your changes to upstream Linux. If appropriate, backport to the stable releases.
@@ -147,4 +164,3 @@ a maintainer tree)
 - If the patch is a new feature
     - tag the patch subject with `ANDROID:`
     - add a `Bug:` tag with the Android bug (required for android-specific features)
-
