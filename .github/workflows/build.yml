@@ -29,6 +29,12 @@ on:
 permissions:
   contents: read
 
+env:
+  # Opt JavaScript-based actions into Node.js 24 ahead of the
+  # GitHub-mandated 2026-06-02 cutover so we do not ship deprecation
+  # warnings on every build.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
