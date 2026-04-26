@@ -2,6 +2,7 @@
 
 > Windows Subsystem for Android kernel build with **ReSukiSU**, **SUSFS** and a working **x86_64 KPM runtime**.
 
+[![Build kernel](https://github.com/Ognisty321/WSA-Linux-Kernel/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Ognisty321/WSA-Linux-Kernel/actions/workflows/build.yml)
 [![Latest release](https://img.shields.io/github/v/release/Ognisty321/WSA-Linux-Kernel?label=release&color=blue)](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/latest)
 [![Kernel](https://img.shields.io/badge/kernel-5.15.104-informational)](#current-release)
 [![Architecture](https://img.shields.io/badge/arch-x86__64-success)](#current-release)

@@ -75,3 +75,14 @@ See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for context.
 ## Reproducing the Released Binary
 
 The released binary in [`wsa-x86_64-kpm-v0.20`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20) was built with the toolchain above on Ubuntu 22.04 using `make ARCH=x86_64 LLVM=1 -j"$(nproc)" bzImage`. The kernel SHA256 is documented in the release notes. Local rebuild SHA256 may differ if the toolchain version differs.
+
+## Continuous Integration
+
+Every push to `main`, every tag and every pull request runs the [Build kernel](../../actions/workflows/build.yml) workflow on a GitHub Actions Ubuntu 22.04 runner. The workflow:
+
+1. Sets up Clang + LLD with ccache.
+2. Applies the same config and toggles documented above.
+3. Builds `bzImage`.
+4. Uploads the resulting kernel as a workflow artifact (14 day retention) named `wsa-kernel-x86_64-<run_number>`.
+
+The kernel artifact downloaded from a CI run can be installed exactly the same way as the release binary documented in [INSTALL.md](INSTALL.md). The CI build tag and SHA256 are surfaced in the workflow summary.

@@ -1,0 +1,175 @@
+name: Build kernel
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - 'LICENSES/**'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - 'LICENSES/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: WSA x86_64 ReSukiSU + SUSFS + KPM
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Free up disk space on the runner
+        run: |
+          set -e
+          df -h /
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo apt-get -y purge 'temurin-*' 'mongodb-*' 'mysql-*' 'postgresql-*' 'azure-cli' 'google-cloud-cli' 'firefox' 'powershell' 2>/dev/null || true
+          sudo apt-get -y autoremove --purge
+          sudo apt-get -y clean
+          df -h /
+
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential clang lld llvm \
+            bc bison flex \
+            libelf-dev libssl-dev \
+            cpio kmod libncurses-dev \
+            python3 git ccache
+          clang --version
+          ld.lld --version
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: wsa-x86_64-kernel
+          max-size: 2G
+
+      - name: Verify tree state
+        run: |
+          set -e
+          test -f configs/wsa/config-wsa-x64
+          test -L drivers/kernelsu
+          test -d KernelSU/kernel
+          test -f fs/susfs.c
+          test -f include/linux/susfs.h
+          echo "Tree state OK"
+
+      - name: Configure kernel
+        run: |
+          set -e
+          cp configs/wsa/config-wsa-x64 .config
+          ./scripts/config --file .config --set-str LOCALVERSION '-WSA-ReSukiSU'
+          ./scripts/config --file .config \
+            -e KSU \
+            -d KSU_DEBUG \
+            -e KSU_SUSFS \
+            -d KSU_TRACEPOINT_HOOK \
+            -d KSU_MANUAL_HOOK \
+            -e KPM \
+            -e KALLSYMS \
+            -e KALLSYMS_ALL \
+            -e KSU_SUSFS_SUS_PATH \
+            -e KSU_SUSFS_SUS_MOUNT \
+            -e KSU_SUSFS_SUS_KSTAT \
+            -e KSU_SUSFS_SPOOF_UNAME \
+            -e KSU_SUSFS_ENABLE_LOG \
+            -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
+            -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
+            -e KSU_SUSFS_OPEN_REDIRECT \
+            -e KSU_SUSFS_SUS_MAP \
+            -e NAMESPACES -e NET_NS -e USER_NS -e PID_NS -e UTS_NS -e IPC_NS \
+            -e CGROUPS -e MEMCG -e CGROUP_PIDS -e CGROUP_BPF \
+            -e OVERLAY_FS \
+            -e NETFILTER_XT_TARGET_MASQUERADE -e NF_NAT \
+            -e IP_NF_NAT -e IP_NF_TARGET_MASQUERADE
+          make ARCH=x86_64 LLVM=1 CC="ccache clang" olddefconfig
+          echo "Selected config:"
+          grep -E '^CONFIG_(KSU|KPM|KALLSYMS|LOCALVERSION)' .config | sort
+
+      - name: Build bzImage
+        run: |
+          set -e
+          make ARCH=x86_64 LLVM=1 CC="ccache clang" -j"$(nproc)" bzImage
+
+      - name: Inspect output
+        id: inspect
+        run: |
+          set -e
+          KRELEASE="$(make ARCH=x86_64 LLVM=1 -s kernelrelease)"
+          KSHA="$(sha256sum arch/x86/boot/bzImage | awk '{print $1}')"
+          KSIZE="$(stat -c '%s' arch/x86/boot/bzImage)"
+          echo "Kernel release: $KRELEASE"
+          echo "Kernel SHA256:  $KSHA"
+          echo "Kernel size:    $KSIZE bytes"
+          echo "Markers:"
+          strings arch/x86/boot/bzImage | grep -E 'WSA-ReSukiSU|KPM-loader' | head -5 || true
+          {
+            echo "kernel_release=$KRELEASE"
+            echo "kernel_sha=$KSHA"
+            echo "kernel_size=$KSIZE"
+          } >> "$GITHUB_OUTPUT"
+          mkdir -p out
+          cp arch/x86/boot/bzImage "out/kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}"
+          (cd out && sha256sum "kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}" > SHA256SUMS.txt)
+
+      - name: Build summary
+        run: |
+          {
+            echo "## Build Result"
+            echo ""
+            echo "| Field | Value |"
+            echo "| --- | --- |"
+            echo "| Kernel release | \`${{ steps.inspect.outputs.kernel_release }}\` |"
+            echo "| Kernel SHA256 | \`${{ steps.inspect.outputs.kernel_sha }}\` |"
+            echo "| Kernel size | ${{ steps.inspect.outputs.kernel_size }} bytes |"
+            echo ""
+            echo "### KPM markers"
+            echo ""
+            echo '```text'
+            strings arch/x86/boot/bzImage | grep -E 'WSA-ReSukiSU|KPM-loader' | head -5 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload kernel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wsa-kernel-x86_64-${{ github.run_number }}
+          path: |
+            out/kernel_resukisu_susfs_kpm_x86_64_*
+            out/SHA256SUMS.txt
+          retention-days: 14
+          if-no-files-found: error
