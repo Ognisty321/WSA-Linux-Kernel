@@ -1,0 +1,4 @@
+[submodule "KernelSU"]
+	path = KernelSU
+	url = https://github.com/Ognisty321/ReSukiSU.git
+	branch = wsa-x86_64-kpm
