@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/Ognisty321/WSA-Linux-Kernel#readme
+    about: Install guide, build guide, KPM port details and FAQ.
+  - name: ReSukiSU companion repository
+    url: https://github.com/Ognisty321/ReSukiSU
+    about: ReSukiSU side of the WSA x86_64 port (KernelSU submodule).
+  - name: ReSukiSU upstream
+    url: https://github.com/ReSukiSU/ReSukiSU
+    about: Upstream ReSukiSU project. Issues that are not WSA x86_64 specific belong upstream.

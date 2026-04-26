@@ -1,0 +1,70 @@
+# FAQ
+
+## My ARM64 KPM does not load. Why?
+
+ARM64 `.kpm` binaries are compiled for a different ELF machine and use AArch64 relocations, so they cannot load on this x86_64 kernel. KPMs with C source can be ported by rebuilding for x86_64. See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for recommended compiler flags.
+
+## ReSukiSU Manager shows `Unsupported` after a Manager update
+
+The Manager ships its own `libksud.so`. After a Manager upgrade, Android may overwrite that library with a stock build that does not handle the `kpm` subcommand on x86_64. The kernel side is unaffected, only the Manager UI badge is misleading. Either reinstall the previous Manager APK, or wait for the next Manager build that carries the x86_64 path.
+
+## Manager shows `KPM Version Supported` but a hook does nothing
+
+Manager only checks transport reachability and the loader version. A green `Supported` badge proves that `ksud kpm version` can talk to the kernel, not that any specific hook works. To diagnose:
+
+1. Run `adb shell su -c "ksud kpm list"` and confirm your module is loaded.
+2. Run `adb shell su -c "ksud kpm info <name>"` and confirm metadata.
+3. Run `adb shell su -c "dmesg | tail -200"` and look for `kpm:` lines from the loader.
+
+## How do I disable Memory Integrity (HVCI) on Windows?
+
+Open Windows Security, go to Device security, then Core isolation details, and toggle Memory Integrity off. Reboot Windows. To verify from PowerShell:
+
+```powershell
+Get-CimInstance -ClassName Win32_DeviceGuard `
+  -Namespace root\Microsoft\Windows\DeviceGuard |
+  Select-Object SecurityServicesRunning
+```
+
+`SecurityServicesRunning` should not contain `2`. If a corporate policy keeps it on, this kernel may not be usable on that machine.
+
+## WSA does not boot after replacing the kernel
+
+Roll back to your backup:
+
+```powershell
+WsaClient.exe /shutdown
+$WsaDir = "C:\Path\To\WSA"
+Copy-Item -Force "$WsaDir\Tools\kernel.backup" "$WsaDir\Tools\kernel"
+Add-AppxPackage -ForceApplicationShutdown -ForceUpdateFromAnyVersion -Register "$WsaDir\AppxManifest.xml"
+```
+
+If you did not make a backup, reinstall WSA from your original source.
+
+## How do I confirm KPM is actually running?
+
+```powershell
+adb connect 127.0.0.1:58526
+adb shell uname -a
+adb shell su -c "ksud kpm version"
+```
+
+The kernel string must contain `WSA-ReSukiSU+`. The KPM version must read `ReSukiSU-x86_64-KPM-loader/0.20`.
+
+## Can I use this kernel with a different WSA build?
+
+The release was built and tested against WSA 2407 style `5.15.104` x86_64. Other WSA builds may have different `bzImage` boot expectations and need their own validation. Building from source against a matching WSA tree is the right path.
+
+## Where do I report a bug?
+
+Open a [bug report](https://github.com/Ognisty321/WSA-Linux-Kernel/issues/new/choose) and include:
+
+1. WSA version.
+2. Output of `adb shell uname -a`.
+3. Output of `adb shell su -c "ksud kpm version"`.
+4. Relevant `dmesg` slice.
+5. Whether Memory Integrity was on or off on the host.
+
+## Why is direct syscall hook install disabled?
+
+A direct `sys_call_table` hook on x86_64 carries known integrity hazards on FineIBT, CFI and ftrace owned syscall slots. In this release the API surface is exposed as wrappers, but install calls return `EOPNOTSUPP` rather than ship a backend that has not been fully validated. A future release may enable a validated path.

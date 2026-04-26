@@ -1,154 +1,111 @@
-# ReSukiSU plus SUSFS for WSA x86_64
+# ReSukiSU + SUSFS for WSA x86_64
 
-Author and maintainer: Ognisty321
+> Windows Subsystem for Android kernel build with **ReSukiSU**, **SUSFS** and a working **x86_64 KPM runtime**.
 
-This repository provides a Windows Subsystem for Android kernel build with ReSukiSU, SUSFS and x86_64 KPM support.
+[![Latest release](https://img.shields.io/github/v/release/Ognisty321/WSA-Linux-Kernel?label=release&color=blue)](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/latest)
+[![Kernel](https://img.shields.io/badge/kernel-5.15.104-informational)](#current-release)
+[![Architecture](https://img.shields.io/badge/arch-x86__64-success)](#current-release)
+[![License](https://img.shields.io/badge/license-GPL--2.0-lightgrey)](COPYING)
 
-The base goal is a usable ReSukiSU kernel for WSA 2407 style x86_64 builds. On top of that, this fork adds the missing x86_64 KPM runtime so ReSukiSU Manager can use KPM on WSA instead of only showing the normal root and SUSFS features.
+WSA runs an x86_64 Linux kernel. The public ReSukiSU and SukiSU KPM flow was designed around ARM64 KernelPatch payloads, so flipping `CONFIG_KPM=y` on a WSA build does not give you a working KPM runtime by itself. This fork adds the missing x86_64 side directly inside the kernel tree: an x86_64 KPM ELF loader, x86_64 RELA relocation handling, an inline hook backend with `text_poke_bp()` based install and restore, executable memory hardening and Tasks RCU lifetime for trampolines.
 
-The public ReSukiSU and SukiSU KPM flow was designed around ARM64 KernelPatch payloads. WSA uses an x86_64 Linux kernel, so enabling `CONFIG_KPM=y` was not enough. The ARM64 `kpimg` and `kptools` path could not patch the WSA `bzImage`, could not load x86_64 KPM objects and could not provide an x86_64 inline hook backend. This fork fills that WSA x86_64 gap directly in the kernel tree.
+The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM modules can all be used on x86_64.
 
 ## Current Release
 
-1. Release: `wsa-x86_64-kpm-v0.20`
-2. Kernel: `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+`
-3. Build: `#20`
-4. Architecture: `x86_64`
-5. KPM version: `ReSukiSU-x86_64-KPM-loader/0.20`
-6. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
+| Field | Value |
+| --- | --- |
+| Tag | [`wsa-x86_64-kpm-v0.20`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20) |
+| Kernel | `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+` |
+| Build number | `#20` |
+| Architecture | `x86_64` |
+| KPM loader | `ReSukiSU-x86_64-KPM-loader/0.20` |
+| Kernel SHA256 | `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f` |
 
-Release download:
+## Quick Start
 
-```text
-https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20
-```
+1. Download the kernel binary from the [latest release](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/latest).
+2. Verify SHA256 against the value above.
+3. Replace `Tools\kernel` inside your unpacked WSA package and re-register the WSA appx.
+4. Boot WSA and run `adb shell uname -a`. The kernel string must contain `WSA-ReSukiSU+`.
+5. Open ReSukiSU Manager and confirm `KPM Version: Supported (ReSukiSU-x86_64-KPM-loader/0.20)`.
 
-## Project Features
+Detailed step by step install for Windows is in [docs/INSTALL.md](docs/INSTALL.md).
+
+## Important: HVCI / Memory Integrity
+
+WSA on Windows can run with Hyper-V Memory Integrity (HVCI) on, and current testing shows the WSA Linux guest is not subject to host HVCI W^X enforcement, so KPM inline hooks work. If a future Windows build extends hypervisor enforced W^X to child partitions, the loader is built to detect failed text writes and refuse to install hooks rather than silently break.
+
+If something does not work on your machine, the first thing to try is disabling Memory Integrity on the Windows host and rebooting. Steps for that are in [docs/FAQ.md](docs/FAQ.md).
+
+## What Is Inside
 
 1. WSA 5.15.104 x86_64 kernel base.
-2. ReSukiSU integration.
-3. SUSFS integration.
-4. KPM enabled as a working x86_64 runtime, not only a config flag.
+2. ReSukiSU integration with `CONFIG_KSU=y` and SUSFS support.
+3. SUSFS integration with `CONFIG_KSU_SUSFS=y`.
+4. x86_64 KPM runtime, not just `CONFIG_KPM=y`.
 5. Tested release artifact for users who do not want to rebuild the kernel.
-6. Public build and install documentation without machine specific paths.
 
-## KPM Port Details
+The KPM port adds:
 
 1. Android x86_64 `ksud kpm` command path enabled for ReSukiSU Manager.
-2. x86_64 `ET_REL` KPM loader added with `.kpm.info`, `.kpm.init`, `.kpm.exit`, optional `.kpm.ctl0` and optional `.kpm.ctl1`.
-3. x86_64 RELA relocation support added for common kernel style KPM objects.
-4. KernelPatch style compatibility symbols added for memory helpers, symbol lookup, hotpatch, inline hook, function pointer hook, `hook_wrap` and `fp_hook_wrap`.
-5. x86_64 inline hook trampoline backend added with RIP relative instruction relocation.
-6. Normal in range inline hook install and restore use the kernel `text_poke_bp()` INT3 patching mechanism.
-7. Generated trampoline and wrapper code uses `RW+NX` and `ROX` executable memory transitions.
-8. Tasks RCU synchronization is used before generated executable buffers are freed.
-9. Unsafe or conflicting hook targets owned by ftrace, kprobes, alternatives, jump labels or static calls are refused.
+2. x86_64 `ET_REL` KPM loader with `.kpm.info`, `.kpm.init`, `.kpm.exit`, `.kpm.ctl0` and `.kpm.ctl1`.
+3. x86_64 RELA relocation support for the relocation types kernel style KPM objects need.
+4. KernelPatch style compatibility surface: `kpver`, `kver`, `kp_malloc`, `kp_free`, `compat_copy_to_user`, `symbol_lookup_name`, `hotpatch`, `hook`, `hook_wrap`, `fp_hook`, `fp_hook_wrap`.
+5. x86_64 inline hook trampoline backend with kernel `insn` decoder for RIP relative fixup.
+6. `text_poke_bp()` based install and restore for normal `JMP rel32` hooks under `text_mutex`.
+7. `RW+NX` to `ROX` page transitions for generated code.
+8. `synchronize_rcu_tasks_rude()` plus `synchronize_rcu_tasks()` before generated executable buffers are freed.
+9. Refusal of unsafe or conflicting hook targets owned by ftrace, kprobes, alternatives, jump labels or static calls.
 
-## Why This Port Exists
-
-WSA is x86_64.
-
-Most existing KPM support in ReSukiSU, SukiSU and KernelPatch related projects assumes ARM64. The ARM64 flow uses ARM64 image parsing, ARM64 branch patching, ARM64 relocation handling and ARM64 cache maintenance. That does not apply to the WSA kernel.
-
-This project does not emulate ARM64 KPM modules. It provides an x86_64 KPM host so x86_64 aware KPM modules can be built and tested for WSA.
+Full technical write up of the port is in [docs/KPM_PORT.md](docs/KPM_PORT.md).
 
 ## Compatibility
 
-1. ARM64 `.kpm` binaries do not load on this x86_64 kernel.
-2. KPMs with source code can be ported when they avoid ARM64 assembly, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helper assumptions.
-3. Direct syscall hook wrappers are exported for compatibility, but install calls intentionally return `EOPNOTSUPP` in this release.
-4. The tested target is WSA 2407 style `5.15.104` x86_64. Other WSA releases need their own validation.
+1. WSA 2407 style `5.15.104` x86_64 is the tested target.
+2. ARM64 `.kpm` binaries cannot load on this kernel.
+3. KPMs with C source can be ported to x86_64 if they avoid ARM64 assembly, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Recommended build flags are in [docs/KPM_PORT.md](docs/KPM_PORT.md#kpm-build-flags).
+4. Direct syscall hook install is intentionally not exposed in this release. The wrapper symbols are present for compatibility, but install calls return `EOPNOTSUPP`.
 
 ## Validation
 
-The tested build passed:
+The release build was stress tested with capability KPMs covering basic KPM ABI, hotpatch, function pointer hook, inline hook, trampoline restore, `hook_wrap`, `fp_hook_wrap`, x86_64 instruction relocation cases, malformed metadata rejection and unsupported syscall hook rejection.
 
-1. Basic KPM load, info, control and unload.
-2. Hotpatch and function pointer hook capability checks.
-3. Inline hook install, trampoline call and restore checks.
-4. `hook_wrap` and `fp_hook_wrap` checks.
-5. x86_64 instruction relocation checks.
-6. Malformed `.kpm.info` rejection.
-7. Unsupported syscall hook rejection.
-8. `500` loops across `5` capability modules, for `2500` load, control and unload cycles.
-9. Final `kpm num = 0`.
-10. Kernel log check clean for kernel `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcode reports and use after free reports.
+```text
+500 loops x 5 modules = 2500 load/control/unload cycles
+final kpm num = 0
+kernel log clean for BUG / WARNING / Oops / GP fault / invalid opcode / use after free
+```
 
-The stock WSA config used here does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`, `CFI` or `FineIBT`. Those rows require a separate debug kernel.
+The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`, `CFI` or `FineIBT`. Validation rows that require those configs need a separate debug kernel build and are tracked in [docs/KPM_PORT.md](docs/KPM_PORT.md#open-validation).
 
 ## Repository Layout
 
-1. `README_WSA_X86_64_KPM.md` contains the WSA build and install guide.
-2. `KernelSU` points to the matching ReSukiSU branch for this port.
-3. `KernelSU/docs/WSA_X86_64_KPM.md` documents the ReSukiSU loader side.
-4. `KernelSU/kernel/kpm/kpm_loader_x86_64.c` contains the main x86_64 KPM loader implementation.
-5. `fs/susfs.c` and `include/linux/susfs*.h` contain the SUSFS integration.
-
-## Build
-
-Clone with submodules:
-
-```bash
-git clone --recurse-submodules https://github.com/Ognisty321/WSA-Linux-Kernel.git
-cd WSA-Linux-Kernel
-git checkout main
-git submodule update --init --recursive
-```
-
-Build:
-
-```bash
-make ARCH=x86_64 LLVM=1 -j"$(nproc)" bzImage
-```
-
-The output kernel image is:
-
-```text
-arch/x86/boot/bzImage
-```
-
-## Install
-
-Use the unpacked WSA directory on your own machine. In the examples below, replace `C:\Path\To\WSA` with your WSA directory.
-
-PowerShell:
-
-```powershell
-$WsaDir = "C:\Path\To\WSA"
-$KernelImage = "C:\Path\To\WSA-Linux-Kernel\arch\x86\boot\bzImage"
-
-Copy-Item -Force "$WsaDir\Tools\kernel" "$WsaDir\Tools\kernel.backup"
-Copy-Item -Force $KernelImage "$WsaDir\Tools\kernel"
-Add-AppxPackage -ForceApplicationShutdown -ForceUpdateFromAnyVersion -Register "$WsaDir\AppxManifest.xml"
-```
-
-Verify:
-
-```powershell
-adb connect 127.0.0.1:58526
-adb shell uname -a
-```
-
-Expected KPM version:
-
-```text
-ReSukiSU-x86_64-KPM-loader/0.20
-```
-
-## KPM Build Notes
-
-KPM modules should be built as x86_64 non PIC RELA objects. A working baseline is:
-
-```text
--mcmodel=kernel -mno-red-zone -mno-sse -mno-mmx -mno-avx -fno-jump-tables -fcf-protection=none -mretpoline-external-thunk -fno-pic -fno-plt -fno-common
-```
+| Path | Purpose |
+| --- | --- |
+| [docs/INSTALL.md](docs/INSTALL.md) | Step by step Windows install for users. |
+| [docs/BUILD.md](docs/BUILD.md) | Reproducible build instructions for WSL2 / Linux. |
+| [docs/KPM_PORT.md](docs/KPM_PORT.md) | Technical description of the x86_64 KPM port. |
+| [docs/FAQ.md](docs/FAQ.md) | Common questions and recovery steps. |
+| [CHANGELOG.md](CHANGELOG.md) | Release history. |
+| `KernelSU/` | Submodule pointing at the matching [`Ognisty321/ReSukiSU`](https://github.com/Ognisty321/ReSukiSU) branch. |
+| `KernelSU/kernel/kpm/kpm_loader_x86_64.c` | Main x86_64 KPM loader. |
+| `KernelSU/kernel/hook/x86_64/patch_memory.c` | x86_64 text patching backend. |
+| `fs/susfs.c`, `include/linux/susfs*.h` | SUSFS integration. |
 
 ## Branches
 
-1. `main` is the public default branch for this WSA x86_64 ReSukiSU, SUSFS and KPM port.
-2. `wsa-x86_64-kpm` is kept as a named development branch for the same port line.
-3. The `KernelSU` submodule follows `Ognisty321/ReSukiSU` on the matching branch.
+1. `main` is the public default branch for this WSA x86_64 ReSukiSU + SUSFS + KPM port.
+2. The `KernelSU` submodule follows `Ognisty321/ReSukiSU` on the matching branch.
+
+## Reporting Issues
+
+If something is broken, please open an issue in the [issue tracker](https://github.com/Ognisty321/WSA-Linux-Kernel/issues) using one of the templates. Include `adb shell uname -a`, the output of `adb shell su -c ksud kpm version`, and the relevant `dmesg` slice.
 
 ## Credits
 
-This work builds on Microsoft WSA Linux Kernel, ReSukiSU, KernelSU, SukiSU related research, SUSFS and the Linux x86 text patching infrastructure.
+This work builds on the Microsoft WSA Linux Kernel, KernelSU by tiann, ReSukiSU, SukiSU related research, SUSFS by simonpunk and the Linux x86 text patching infrastructure. The x86_64 KPM port and packaging in this repository is by Ognisty321.
+
+## License
+
+The kernel itself is GPL-2.0. KernelSU components retain their upstream licenses. See [COPYING](COPYING), [LICENSES/](LICENSES) and [KernelSU/LICENSE](https://github.com/Ognisty321/ReSukiSU/blob/main/LICENSE).

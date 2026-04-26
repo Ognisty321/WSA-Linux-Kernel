@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a feature or improvement for the WSA x86_64 KPM port
+labels: ["enhancement"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have read docs/KPM_PORT.md and confirmed the feature is in scope for this fork
+          required: true
+        - label: I have searched the issue tracker for similar requests
+          required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe what you would like the kernel or loader to do
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false

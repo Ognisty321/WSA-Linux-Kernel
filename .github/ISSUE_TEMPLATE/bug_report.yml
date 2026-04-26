@@ -1,0 +1,80 @@
+name: Bug report
+description: Report a problem with the WSA x86_64 ReSukiSU + SUSFS + KPM kernel
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I am running the latest release listed at https://github.com/Ognisty321/WSA-Linux-Kernel/releases
+          required: true
+        - label: I have searched the issue tracker for similar reports
+          required: true
+        - label: I have read docs/INSTALL.md and docs/FAQ.md
+          required: true
+        - label: I have a backup of my original WSA kernel
+          required: true
+
+  - type: input
+    id: wsa_version
+    attributes:
+      label: WSA version
+      placeholder: e.g. 2407.40000.4.0
+    validations:
+      required: true
+
+  - type: input
+    id: uname
+    attributes:
+      label: Output of `adb shell uname -a`
+      placeholder: paste the full uname line
+    validations:
+      required: true
+
+  - type: input
+    id: kpm_version
+    attributes:
+      label: Output of `adb shell su -c "ksud kpm version"`
+      placeholder: ReSukiSU-x86_64-KPM-loader/0.20
+    validations:
+      required: true
+
+  - type: dropdown
+    id: hvci
+    attributes:
+      label: Memory Integrity (HVCI) state on the Windows host
+      options:
+        - "Off"
+        - "On"
+        - "Unknown"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: Describe the bug and the steps to reproduce it
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: dmesg
+    attributes:
+      label: Relevant dmesg slice
+      description: Paste the relevant lines from `adb shell dmesg | tail -200`
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Manager screenshot, KPM module name, additional context
+    validations:
+      required: false

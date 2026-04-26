@@ -1,0 +1,28 @@
+name: Question
+description: Ask a question about installing, building or porting KPMs
+labels: ["question"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have read docs/INSTALL.md, docs/BUILD.md, docs/KPM_PORT.md and docs/FAQ.md
+          required: true
+        - label: I have searched the issue tracker for similar questions
+          required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What do you want to know?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: WSA version, kernel `uname -a`, KPM module you are working with
+    validations:
+      required: false
