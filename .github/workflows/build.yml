@@ -73,7 +73,10 @@ jobs:
           ld.lld --version
 
       - name: Set up ccache
-        uses: hendrikmuhs/ccache-action@v1.2
+        # Pinned to v1.2.23 because the floating v1.2 tag still
+        # points at the older Node.js 20 release. v1.2.23 declares
+        # node24 in its action metadata.
+        uses: hendrikmuhs/ccache-action@v1.2.23
         with:
           key: wsa-x86_64-kernel
           max-size: 2G
