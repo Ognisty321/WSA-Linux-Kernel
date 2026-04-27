@@ -85,6 +85,8 @@ scripts/wsa-release-manifest.sh /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.1
 
 Keep that manifest next to the binary. If the tree is dirty or the artifact SHA does not match the release notes, do not publish it as a known-good release.
 
+The manifest records the kernel artifact SHA256, kernel commit, submodule commit, KPM loader ABI, release `ksud` SHA256 when present, the Manager x86_64 packaging guard hash and the KPM ELF fuzz smoke harness hashes.
+
 ## Continuous Integration
 
 Every push to `main`, every tag and every pull request runs the [Build kernel](../../actions/workflows/build.yml) workflow on a GitHub Actions Ubuntu 22.04 runner. The workflow:

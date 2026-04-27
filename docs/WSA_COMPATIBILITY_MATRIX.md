@@ -18,3 +18,4 @@ For each release candidate, add a row with:
 4. `adb shell uname -a`.
 5. `adb shell su -c "ksud kpm doctor --json"`.
 6. `adb shell su -c "ksud kpm audit --json"` after a load/control/unload cycle.
+7. `KernelSU/scripts/check-manager-kpm-x86.sh` result for the Manager APK used in that row.

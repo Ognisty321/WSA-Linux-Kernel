@@ -58,6 +58,21 @@ if [ -d KernelSU/.git ]; then
 		kv ksud_x86_64_android_release_sha256 \
 			"$(sha256sum KernelSU/userspace/ksud/target/x86_64-linux-android/release/ksud | awk '{print $1}')"
 	fi
+	if [ -f KernelSU/scripts/check-manager-kpm-x86.sh ]; then
+		kv manager_x86_64_check_script "KernelSU/scripts/check-manager-kpm-x86.sh"
+		kv manager_x86_64_check_script_sha256 \
+			"$(sha256sum KernelSU/scripts/check-manager-kpm-x86.sh | awk '{print $1}')"
+	fi
+	if [ -f KernelSU/scripts/fuzz-kpm-x86-smoke.sh ]; then
+		kv kpm_x86_64_fuzz_smoke_script "KernelSU/scripts/fuzz-kpm-x86-smoke.sh"
+		kv kpm_x86_64_fuzz_smoke_script_sha256 \
+			"$(sha256sum KernelSU/scripts/fuzz-kpm-x86-smoke.sh | awk '{print $1}')"
+	fi
+	if [ -f KernelSU/tools/kpm-x86-fuzz/kpm_elf_fuzz.c ]; then
+		kv kpm_x86_64_fuzz_harness "KernelSU/tools/kpm-x86-fuzz/kpm_elf_fuzz.c"
+		kv kpm_x86_64_fuzz_harness_sha256 \
+			"$(sha256sum KernelSU/tools/kpm-x86-fuzz/kpm_elf_fuzz.c | awk '{print $1}')"
+	fi
 fi
 
 if [ -f .config ]; then
