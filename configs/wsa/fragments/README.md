@@ -12,6 +12,14 @@ then run `make ARCH=x86_64 LLVM=1 olddefconfig`.
 
 Record any dropped symbols from `olddefconfig` in the release or validation notes.
 
+Use the local checker to produce a kept/dropped symbol report without touching the main `.config`:
+
+```bash
+scripts/wsa-validate-config-fragment.sh configs/wsa/fragments/wsa-x86_64-debug.config
+```
+
+Set `BUILD=1` to build a validation `bzImage` under `out/wsa-validation/<fragment>/` and generate `BUILD_INFO.txt` plus `SHA256SUMS.txt` for that debug artifact.
+
 Current 5.15.104 WSA base check:
 
 1. `wsa-x86_64-debug.config` keeps `DEBUG_WX`, `PROVE_LOCKING`, `DEBUG_LIST`, `DEBUG_KMEMLEAK` and `KFENCE`.
