@@ -11,10 +11,19 @@ The WSA kernel release is reproducible only when the full runtime bundle is capt
 7. `susfs4ksu` commit or branch used by the build script.
 8. Clang, LLD, Rust and Cargo versions.
 9. ReSukiSU Manager version, release `ksud` SHA256 and confirmation that `libksud.so` contains the x86_64 `ksud kpm` path.
-10. SHA256 of `KernelSU/scripts/check-manager-kpm-x86.sh`, `KernelSU/scripts/fuzz-kpm-x86-smoke.sh` and `KernelSU/tools/kpm-x86-fuzz/kpm_elf_fuzz.c`.
-11. Boot smoke result and dmesg scan result.
+10. SHA256 of `KernelSU/scripts/check-manager-kpm-x86.sh`, `KernelSU/scripts/check-kpm-module-x86.sh`, `KernelSU/scripts/fuzz-kpm-x86-smoke.sh` and `KernelSU/tools/kpm-x86-fuzz/kpm_elf_fuzz.c`.
+11. `scripts/wsa-verify-release-manifest.sh` result for the exact manifest and kernel artifact.
+12. Boot smoke result and dmesg scan result.
 
 Use `scripts/wsa-release-manifest.sh arch/x86/boot/bzImage` after a build. Store its output next to the kernel binary and paste the SHA256 into the release notes.
+
+Verify the sidecar manifest before promoting a local build:
+
+```bash
+scripts/wsa-verify-release-manifest.sh \
+  /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.104.manifest \
+  /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.104
+```
 
 Minimum known-good verification:
 

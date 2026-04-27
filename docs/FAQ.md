@@ -4,6 +4,14 @@
 
 ARM64 `.kpm` binaries are compiled for a different ELF machine and use AArch64 relocations, so they cannot load on this x86_64 kernel. KPMs with C source can be ported by rebuilding for x86_64. See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for recommended compiler flags and [../KernelSU/docs/KPM_X86_64_PORTING.md](../KernelSU/docs/KPM_X86_64_PORTING.md) for the source-level checklist.
 
+Before trying a rebuilt module on WSA, run:
+
+```bash
+KernelSU/scripts/check-kpm-module-x86.sh /path/to/module.kpm
+```
+
+Tracked module status lives in [KPM_MODULE_COMPATIBILITY.md](KPM_MODULE_COMPATIBILITY.md).
+
 ## ReSukiSU Manager shows `Unsupported` after a Manager update
 
 The Manager ships its own `libksud.so`. After a Manager upgrade, Android may overwrite that library with a stock build that does not handle the `kpm` subcommand on x86_64. The kernel side is unaffected if `adb shell su -c "ksud kpm version"` still returns `ReSukiSU-x86_64-KPM-loader/0.20`.
