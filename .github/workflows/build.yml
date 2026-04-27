@@ -147,6 +147,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           mkdir -p out
           cp arch/x86/boot/bzImage "out/kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}"
+          scripts/wsa-release-manifest.sh "out/kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}" > out/BUILD_INFO.txt
           (cd out && sha256sum "kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}" > SHA256SUMS.txt)
 
       - name: Build summary
@@ -159,11 +160,18 @@ jobs:
             echo "| Kernel release | \`${{ steps.inspect.outputs.kernel_release }}\` |"
             echo "| Kernel SHA256 | \`${{ steps.inspect.outputs.kernel_sha }}\` |"
             echo "| Kernel size | ${{ steps.inspect.outputs.kernel_size }} bytes |"
+            echo "| Build manifest | \`BUILD_INFO.txt\` |"
             echo ""
             echo "### KPM markers"
             echo ""
             echo '```text'
             strings arch/x86/boot/bzImage | grep -E 'WSA-ReSukiSU|KPM-loader' | head -5 || true
+            echo '```'
+            echo ""
+            echo "### Build manifest"
+            echo ""
+            echo '```text'
+            sed -n '1,80p' out/BUILD_INFO.txt
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -174,5 +182,6 @@ jobs:
           path: |
             out/kernel_resukisu_susfs_kpm_x86_64_*
             out/SHA256SUMS.txt
+            out/BUILD_INFO.txt
           retention-days: 14
           if-no-files-found: error
