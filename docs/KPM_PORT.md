@@ -40,6 +40,8 @@ Intentionally not implemented in this release:
 
 The formal x86_64 ABI contract is in [`KernelSU/docs/KPM_X86_64_ABI.md`](../KernelSU/docs/KPM_X86_64_ABI.md). The current loader marker is `ReSukiSU-x86_64-KPM-loader/0.20` with ABI version `1`.
 
+Patch hygiene and rebase rules are in [`KernelSU/docs/UPSTREAMING_X86_64.md`](../KernelSU/docs/UPSTREAMING_X86_64.md).
+
 KPM modules are x86_64 `ET_REL` ELF objects that expose these sections:
 
 1. `.kpm.info` text metadata: name, version, license, author, description.

@@ -102,6 +102,7 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 | `KernelSU/docs/KPM_X86_64_ABI.md` | Formal x86_64 KPM ABI contract. |
 | `KernelSU/docs/KPM_X86_64_PORTING.md` | Source-level ARM64 KPM to WSA x86_64 porting checklist. |
 | `KernelSU/docs/MANAGER_X86_64.md` | ReSukiSU Manager and `libksud.so` x86_64 packaging checklist. |
+| `KernelSU/docs/UPSTREAMING_X86_64.md` | Patch hygiene and rebase checklist for the x86_64 KPM port. |
 | `KernelSU/scripts/check-manager-kpm-x86.sh` | Local APK or `libksud.so` packaging guard. |
 | `KernelSU/kernel/kpm/kpm_loader_x86_64.c` | Main x86_64 KPM loader. |
 | `KernelSU/kernel/hook/x86_64/patch_memory.c` | x86_64 text patching backend. |
