@@ -27,7 +27,8 @@ Either reinstall the previous known-good Manager APK, or install a Manager build
 If the live self-test prints `/data/adb/ksud does not expose the kpm subcommand`, the running WSA userspace is still missing the KPM-capable `ksud`. Confirm it with:
 
 ```bash
-adb shell su -M -c "/data/adb/ksud --help 2>&1 | head -80"
+ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
+  bash scripts/wsa-check-runtime-ksud.sh
 ```
 
 The kernel cannot make the userspace `kpm` command appear. Install a Manager or `libksud.so` build that passes the x86_64 guard, then rerun `RUN_WSA=1 bash KernelSU/scripts/kpm-x86-preflight.sh`.
