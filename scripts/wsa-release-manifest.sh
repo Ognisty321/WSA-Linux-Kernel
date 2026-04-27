@@ -63,6 +63,11 @@ if [ -d KernelSU/.git ]; then
 		kv manager_x86_64_check_script_sha256 \
 			"$(sha256sum KernelSU/scripts/check-manager-kpm-x86.sh | awk '{print $1}')"
 	fi
+	if [ -f KernelSU/scripts/check-kpm-module-x86.sh ]; then
+		kv kpm_x86_64_module_check_script "KernelSU/scripts/check-kpm-module-x86.sh"
+		kv kpm_x86_64_module_check_script_sha256 \
+			"$(sha256sum KernelSU/scripts/check-kpm-module-x86.sh | awk '{print $1}')"
+	fi
 	if [ -f KernelSU/scripts/fuzz-kpm-x86-smoke.sh ]; then
 		kv kpm_x86_64_fuzz_smoke_script "KernelSU/scripts/fuzz-kpm-x86-smoke.sh"
 		kv kpm_x86_64_fuzz_smoke_script_sha256 \

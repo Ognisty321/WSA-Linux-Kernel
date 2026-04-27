@@ -61,7 +61,7 @@ unload -> kpm_exit(reserved)
 
 The loader exports `kpm_loader_abi_version`, `kpm_abi_version`, `kpm_loader_feature_bits` and `kpm_feature_bits` so modules can detect optional x86_64 runtime capabilities.
 
-The source-level porting checklist is in [`KernelSU/docs/KPM_X86_64_PORTING.md`](../KernelSU/docs/KPM_X86_64_PORTING.md).
+The source-level porting checklist is in [`KernelSU/docs/KPM_X86_64_PORTING.md`](../KernelSU/docs/KPM_X86_64_PORTING.md). WSA module compatibility rows and evidence requirements are tracked in [`KPM_MODULE_COMPATIBILITY.md`](KPM_MODULE_COMPATIBILITY.md).
 
 ## Hook Backend
 
@@ -165,5 +165,5 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 ## Compatibility
 
 1. ARM64 `.kpm` binaries cannot load on this x86_64 kernel.
-2. Source level KPMs port cleanly when they avoid ARM64 inline asm, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Use [`KernelSU/docs/KPM_X86_64_PORTING.md`](../KernelSU/docs/KPM_X86_64_PORTING.md) before claiming compatibility for a real module.
+2. Source level KPMs port cleanly when they avoid ARM64 inline asm, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Use [`KernelSU/docs/KPM_X86_64_PORTING.md`](../KernelSU/docs/KPM_X86_64_PORTING.md) and `KernelSU/scripts/check-kpm-module-x86.sh` before claiming compatibility for a real module.
 3. WSA does not have most vendor specific Android drivers, so KPMs that target a specific phone vendor (`qti_battery_charger`, `xperia_ii_battery_age`, vendor freezers) cannot work on WSA regardless of architecture.
