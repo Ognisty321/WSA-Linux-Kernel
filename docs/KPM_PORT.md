@@ -156,7 +156,7 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 2. `endbr64` preservation under IBT (hook at `func+4`).
 3. `text_poke_bp` atomicity under multi CPU stress with concurrent `perf record -a -F 8000`.
 4. `KASAN_VMALLOC`, `KCSAN`, `KFENCE`, `DEBUG_WX`, `PROVE_LOCKING`, `DEBUG_LIST`, `DEBUG_KMEMLEAK` 24 hour stress soak.
-5. AFL++ / libFuzzer harness for the ELF parser with mutated relocation, section bounds and string table inputs.
+5. Longer AFL++ / libFuzzer runs beyond the smoke harness and generated example/mutation seed corpus.
 6. ftrace / kprobes / livepatch coexistence.
 
 ## Compatibility
