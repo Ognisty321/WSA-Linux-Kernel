@@ -4,6 +4,8 @@ These fragments are optional overlays for ReSukiSU/SUSFS/KPM validation builds.
 Apply them on top of the WSA x86_64 base config with `scripts/kconfig/merge_config.sh`,
 then run `make ARCH=x86_64 LLVM=1 olddefconfig`.
 
+The full validation matrix and result template are in `docs/KPM_DEBUG_VALIDATION.md`.
+
 | Fragment | Purpose |
 | --- | --- |
 | `wsa-x86_64-debug.config` | Locking, list, memory lifetime, stacktrace and W^X diagnostics. |

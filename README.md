@@ -95,6 +95,7 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 | [docs/INSTALL.md](docs/INSTALL.md) | Step by step Windows install for users. |
 | [docs/BUILD.md](docs/BUILD.md) | Reproducible build instructions for WSL2 / Linux. |
 | [docs/KPM_PORT.md](docs/KPM_PORT.md) | Technical description of the x86_64 KPM port. |
+| [docs/KPM_DEBUG_VALIDATION.md](docs/KPM_DEBUG_VALIDATION.md) | Debug kernel validation matrix for W^X, races, owner context and fuzzing. |
 | [docs/FAQ.md](docs/FAQ.md) | Common questions and recovery steps. |
 | [CHANGELOG.md](CHANGELOG.md) | Release history. |
 | `KernelSU/` | Submodule pointing at the matching [`Ognisty321/ReSukiSU`](https://github.com/Ognisty321/ReSukiSU) branch. |

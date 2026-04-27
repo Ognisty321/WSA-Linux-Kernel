@@ -151,7 +151,7 @@ ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
 
 ## Open Validation
 
-The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`, `CFI` or `FineIBT`. Validation rows that need these configs are tracked here for future debug kernel runs:
+The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`, `CFI` or `FineIBT`. The detailed matrix, exact commands and result template live in [KPM_DEBUG_VALIDATION.md](KPM_DEBUG_VALIDATION.md). Validation rows that need these configs are tracked here for future debug kernel runs:
 
 1. CFI / IBT / FineIBT compliance (Clang LTO + `CONFIG_CFI_CLANG=y` + `CONFIG_X86_KERNEL_IBT=y` + `CONFIG_FINEIBT=y`).
 2. `endbr64` preservation under IBT (hook at `func+4`).
