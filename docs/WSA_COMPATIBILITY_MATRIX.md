@@ -6,6 +6,7 @@ WSA is now an archive-style target: Microsoft archived the public WSA app reposi
 
 | WSA package/build | Windows build | Kernel base | HVCI / Memory Integrity | Manager / libksud.so | KPM status | Notes |
 | --- | ---: | --- | --- | --- | --- | --- |
+| local main build `2026-04-27` | `26200` | 5.15.104 | on | release `ksud` SHA256 `68368b32b98adb6ffb2164c6551e0684c2d193e35fbde196384f4948b89573bf`, guard pass | build pass, live runtime pending | Kernel `#32`, SHA256 `cf88452f35897d73fbca82d7e42ac7c0f35d10b4e84a6c398ab70f9713380ec1`, WSA commit `dd82e7546`, ReSukiSU submodule `8acc5a1e`, `scripts/kpm-x86-preflight.sh` passed without `RUN_WSA=1`. |
 | `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe` | `26200` | 5.15.104 | on | release `ksud` SHA256 `68368b32b98adb6ffb2164c6551e0684c2d193e35fbde196384f4948b89573bf` | pass | Validated locally with kernel `#30`, SHA256 `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`, `scripts/kpm-x86-preflight.sh RUN_WSA=1` and `scripts/wsa-kpm-boot-smoke.sh`. |
 | 2407-style known-good local package | record exact package version | 5.15.104 | off | x86_64 KPM-capable ReSukiSU Manager | expected pass | Same package family as the validated HVCI-on row; validate separately before release claims. |
 | Store-updated or unknown WSA package | unknown | unknown | any | unknown | unsupported | Capture package SHA/build before debugging. |
