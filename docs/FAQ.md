@@ -2,11 +2,19 @@
 
 ## My ARM64 KPM does not load. Why?
 
-ARM64 `.kpm` binaries are compiled for a different ELF machine and use AArch64 relocations, so they cannot load on this x86_64 kernel. KPMs with C source can be ported by rebuilding for x86_64. See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for recommended compiler flags.
+ARM64 `.kpm` binaries are compiled for a different ELF machine and use AArch64 relocations, so they cannot load on this x86_64 kernel. KPMs with C source can be ported by rebuilding for x86_64. See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for recommended compiler flags and [../KernelSU/docs/KPM_X86_64_PORTING.md](../KernelSU/docs/KPM_X86_64_PORTING.md) for the source-level checklist.
 
 ## ReSukiSU Manager shows `Unsupported` after a Manager update
 
-The Manager ships its own `libksud.so`. After a Manager upgrade, Android may overwrite that library with a stock build that does not handle the `kpm` subcommand on x86_64. The kernel side is unaffected, only the Manager UI badge is misleading. Either reinstall the previous Manager APK, or wait for the next Manager build that carries the x86_64 path.
+The Manager ships its own `libksud.so`. After a Manager upgrade, Android may overwrite that library with a stock build that does not handle the `kpm` subcommand on x86_64. The kernel side is unaffected if `adb shell su -c "ksud kpm version"` still returns `ReSukiSU-x86_64-KPM-loader/0.20`.
+
+Before reinstalling, check the APK or extracted library:
+
+```bash
+KernelSU/scripts/check-manager-kpm-x86.sh /path/to/ReSukiSU-Manager.apk
+```
+
+Either reinstall the previous known-good Manager APK, or install a Manager build that carries `lib/x86_64/libksud.so` with the x86_64 KPM path.
 
 ## Manager shows `KPM Version Supported` but a hook does nothing
 

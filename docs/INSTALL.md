@@ -107,7 +107,13 @@ Add-AppxPackage -ForceApplicationShutdown -ForceUpdateFromAnyVersion -Register "
 
 ## Manager Library Override
 
-ReSukiSU Manager ships a `libksud.so` that needs an x86_64 path for the `kpm` subcommand. The shipped Manager already covers this on most installs. If after a Manager update the KPM Version field shows `Unsupported`, see [FAQ.md](FAQ.md#manager-shows-unsupported-after-update).
+ReSukiSU Manager ships a `libksud.so` that needs an x86_64 path for the `kpm` subcommand. The shipped Manager already covers this on most installs. Before publishing or pinning a Manager APK for WSA x86_64, verify it from the repo root:
+
+```bash
+KernelSU/scripts/check-manager-kpm-x86.sh /path/to/ReSukiSU-Manager.apk
+```
+
+If after a Manager update the KPM Version field shows `Unsupported`, see [FAQ.md](FAQ.md#resukisu-manager-shows-unsupported-after-a-manager-update).
 
 ## Troubleshooting
 

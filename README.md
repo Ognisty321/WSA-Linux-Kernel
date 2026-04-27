@@ -67,13 +67,13 @@ The KPM port adds:
 8. `synchronize_rcu_tasks_rude()` plus `synchronize_rcu_tasks()` before generated executable buffers are freed.
 9. Refusal of unsafe or conflicting hook targets owned by ftrace, kprobes, alternatives, jump labels or static calls.
 
-Full technical write up of the port is in [docs/KPM_PORT.md](docs/KPM_PORT.md).
+Full technical write up of the port is in [docs/KPM_PORT.md](docs/KPM_PORT.md). Manager packaging checks live in [KernelSU/docs/MANAGER_X86_64.md](KernelSU/docs/MANAGER_X86_64.md), and the source-level module porting checklist is in [KernelSU/docs/KPM_X86_64_PORTING.md](KernelSU/docs/KPM_X86_64_PORTING.md).
 
 ## Compatibility
 
 1. WSA 2407 style `5.15.104` x86_64 is the tested target.
 2. ARM64 `.kpm` binaries cannot load on this kernel.
-3. KPMs with C source can be ported to x86_64 if they avoid ARM64 assembly, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Recommended build flags are in [docs/KPM_PORT.md](docs/KPM_PORT.md#kpm-build-flags).
+3. KPMs with C source can be ported to x86_64 if they avoid ARM64 assembly, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Recommended build flags are in [docs/KPM_PORT.md](docs/KPM_PORT.md#kpm-build-flags), with the longer checklist in [KernelSU/docs/KPM_X86_64_PORTING.md](KernelSU/docs/KPM_X86_64_PORTING.md).
 4. Direct syscall hook install is intentionally not exposed in this release. The wrapper symbols are present for compatibility, but install calls return `EOPNOTSUPP`.
 
 ## Validation
@@ -99,6 +99,9 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 | [CHANGELOG.md](CHANGELOG.md) | Release history. |
 | `KernelSU/` | Submodule pointing at the matching [`Ognisty321/ReSukiSU`](https://github.com/Ognisty321/ReSukiSU) branch. |
 | `KernelSU/docs/KPM_X86_64_ABI.md` | Formal x86_64 KPM ABI contract. |
+| `KernelSU/docs/KPM_X86_64_PORTING.md` | Source-level ARM64 KPM to WSA x86_64 porting checklist. |
+| `KernelSU/docs/MANAGER_X86_64.md` | ReSukiSU Manager and `libksud.so` x86_64 packaging checklist. |
+| `KernelSU/scripts/check-manager-kpm-x86.sh` | Local APK or `libksud.so` packaging guard. |
 | `KernelSU/kernel/kpm/kpm_loader_x86_64.c` | Main x86_64 KPM loader. |
 | `KernelSU/kernel/hook/x86_64/patch_memory.c` | x86_64 text patching backend. |
 | `fs/susfs.c`, `include/linux/susfs*.h` | SUSFS integration. |

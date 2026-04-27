@@ -59,6 +59,8 @@ unload -> kpm_exit(reserved)
 
 The loader exports `kpm_loader_abi_version`, `kpm_abi_version`, `kpm_loader_feature_bits` and `kpm_feature_bits` so modules can detect optional x86_64 runtime capabilities.
 
+The source-level porting checklist is in [`KernelSU/docs/KPM_X86_64_PORTING.md`](../KernelSU/docs/KPM_X86_64_PORTING.md).
+
 ## Hook Backend
 
 Normal in range inline hook:
@@ -92,6 +94,16 @@ Refusal predicates at install time include:
 3. If `.kpm.exit` returns an error, the module remains loaded rather than freeing executable memory that hooks or callbacks may still reference.
 4. `ksud kpm` propagates negative kernel return codes as command failures instead of reporting success.
 5. `ksud kpm doctor --json` reports loader reachability, module count, safe mode and KPM directory hardening.
+
+## Manager Packaging
+
+ReSukiSU Manager must ship an Android x86_64 `libksud.so` with the `ksud kpm` command path. The local guard checks an APK or extracted library:
+
+```bash
+KernelSU/scripts/check-manager-kpm-x86.sh /path/to/ReSukiSU-Manager.apk
+```
+
+The release checklist should record the Manager APK version, APK SHA256, guard output, `ksud kpm version`, `ksud kpm doctor --json` and `ksud kpm audit --json`. See [`KernelSU/docs/MANAGER_X86_64.md`](../KernelSU/docs/MANAGER_X86_64.md).
 
 ## KPM Build Flags
 
@@ -150,5 +162,5 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 ## Compatibility
 
 1. ARM64 `.kpm` binaries cannot load on this x86_64 kernel.
-2. Source level KPMs port cleanly when they avoid ARM64 inline asm, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers.
+2. Source level KPMs port cleanly when they avoid ARM64 inline asm, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Use [`KernelSU/docs/KPM_X86_64_PORTING.md`](../KernelSU/docs/KPM_X86_64_PORTING.md) before claiming compatibility for a real module.
 3. WSA does not have most vendor specific Android drivers, so KPMs that target a specific phone vendor (`qti_battery_charger`, `xperia_ii_battery_age`, vendor freezers) cannot work on WSA regardless of architecture.
