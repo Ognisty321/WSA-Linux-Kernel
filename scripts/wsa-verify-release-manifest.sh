@@ -160,6 +160,8 @@ check_file_hash manager_x86_64_check_script manager_x86_64_check_script_sha256
 check_file_hash kpm_x86_64_module_check_script kpm_x86_64_module_check_script_sha256
 check_file_hash kpm_x86_64_fuzz_smoke_script kpm_x86_64_fuzz_smoke_script_sha256
 check_file_hash kpm_x86_64_fuzz_harness kpm_x86_64_fuzz_harness_sha256
+check_file_hash wsa_manifest_verify_script wsa_manifest_verify_script_sha256
+check_file_hash wsa_runtime_ksud_check_script wsa_runtime_ksud_check_script_sha256
 
 if [ "$failures" -ne 0 ]; then
 	exit 1

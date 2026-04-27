@@ -98,6 +98,18 @@ if [ -f .config ]; then
 	grep -E '^CONFIG_(LOCALVERSION|KSU|KPM|KALLSYMS|DEBUG_WX|KASAN|KCSAN|KFENCE|PROVE_LOCKING)=' .config | sort
 fi
 
+if [ -f scripts/wsa-verify-release-manifest.sh ]; then
+	kv wsa_manifest_verify_script "scripts/wsa-verify-release-manifest.sh"
+	kv wsa_manifest_verify_script_sha256 \
+		"$(sha256sum scripts/wsa-verify-release-manifest.sh | awk '{print $1}')"
+fi
+
+if [ -f scripts/wsa-check-runtime-ksud.sh ]; then
+	kv wsa_runtime_ksud_check_script "scripts/wsa-check-runtime-ksud.sh"
+	kv wsa_runtime_ksud_check_script_sha256 \
+		"$(sha256sum scripts/wsa-check-runtime-ksud.sh | awk '{print $1}')"
+fi
+
 kv clang "$({ clang --version 2>/dev/null || true; } | sed -n '1p')"
 kv ld_lld "$({ ld.lld --version 2>/dev/null || true; } | sed -n '1p')"
 kv rustc "$({ rustc --version 2>/dev/null || true; } | sed -n '1p')"
