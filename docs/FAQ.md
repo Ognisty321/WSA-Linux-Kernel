@@ -42,6 +42,19 @@ Add-AppxPackage -ForceApplicationShutdown -ForceUpdateFromAnyVersion -Register "
 
 If you did not make a backup, reinstall WSA from your original source.
 
+## KPM modules stopped autoloading after a bad boot
+
+The x86_64 `ksud` autoload path writes `/data/adb/kpm.disabled` after a boot-time KPM load failure. This prevents WSA from retrying the same bad autoload set on every boot.
+
+After removing or fixing the broken `.kpm` files, clear the marker:
+
+```powershell
+adb shell su -c "rm -f /data/adb/kpm.disabled"
+adb shell su -c "ksud kpm doctor --json"
+```
+
+`doctor` reports `autoload_disabled` and `autoload_disable_file` so you can confirm the state.
+
 ## How do I confirm KPM is actually running?
 
 ```powershell
