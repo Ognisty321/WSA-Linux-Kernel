@@ -85,7 +85,7 @@ scripts/wsa-release-manifest.sh /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.1
 
 Keep that manifest next to the binary. If the tree is dirty or the artifact SHA does not match the release notes, do not publish it as a known-good release.
 
-The manifest records the kernel artifact SHA256, kernel commit, submodule commit, KPM loader ABI, release `ksud` SHA256 when present, the Manager x86_64 packaging guard hash and the KPM ELF fuzz smoke harness hashes.
+The manifest records the kernel artifact SHA256, kernel commit, submodule commit, KPM loader ABI, release `ksud` SHA256 when present, the Manager x86_64 packaging guard hash, the KPM module checker hash, the KPM ELF fuzz smoke harness hashes and the WSA manifest/runtime checker hashes.
 
 Verify the manifest against the artifact and current checkout before publishing:
 
