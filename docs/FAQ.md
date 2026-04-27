@@ -24,6 +24,14 @@ KernelSU/scripts/check-manager-kpm-x86.sh /path/to/ReSukiSU-Manager.apk
 
 Either reinstall the previous known-good Manager APK, or install a Manager build that carries `lib/x86_64/libksud.so` with the x86_64 KPM path.
 
+If the live self-test prints `/data/adb/ksud does not expose the kpm subcommand`, the running WSA userspace is still missing the KPM-capable `ksud`. Confirm it with:
+
+```bash
+adb shell su -M -c "/data/adb/ksud --help 2>&1 | head -80"
+```
+
+The kernel cannot make the userspace `kpm` command appear. Install a Manager or `libksud.so` build that passes the x86_64 guard, then rerun `RUN_WSA=1 bash KernelSU/scripts/kpm-x86-preflight.sh`.
+
 ## Manager shows `KPM Version Supported` but a hook does nothing
 
 Manager only checks transport reachability and the loader version. A green `Supported` badge proves that `ksud kpm version` can talk to the kernel, not that any specific hook works. To diagnose:
