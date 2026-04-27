@@ -38,6 +38,8 @@ Intentionally not implemented in this release:
 
 ## Loader ABI
 
+The formal x86_64 ABI contract is in [`KernelSU/docs/KPM_X86_64_ABI.md`](../KernelSU/docs/KPM_X86_64_ABI.md). The current loader marker is `ReSukiSU-x86_64-KPM-loader/0.20` with ABI version `1`.
+
 KPM modules are x86_64 `ET_REL` ELF objects that expose these sections:
 
 1. `.kpm.info` text metadata: name, version, license, author, description.
@@ -54,6 +56,8 @@ ctl  -> kpm_ctl0(ctl_args, out_msg, outlen)
 ctl  -> kpm_ctl1(a1, a2, a3)
 unload -> kpm_exit(reserved)
 ```
+
+The loader exports `kpm_loader_abi_version`, `kpm_abi_version`, `kpm_loader_feature_bits` and `kpm_feature_bits` so modules can detect optional x86_64 runtime capabilities.
 
 ## Hook Backend
 
@@ -80,6 +84,14 @@ Refusal predicates at install time include:
 2. `ftrace_location()` and `is_ftrace_trampoline()` must be clean.
 3. `get_kprobe()` must return null.
 4. The address must not lie inside `.entry.text`, `.noinstr.text`, exception tables, alternatives, jump labels or static call tables.
+
+## Safety Semantics
+
+1. `hotpatch(addrs, values, cnt)` snapshots all original 32 bit values before commit and rolls back earlier writes if a later write fails.
+2. `unload` marks a module as unloading before calling `.kpm.exit`; `control` returns `-EBUSY` while this is in progress.
+3. If `.kpm.exit` returns an error, the module remains loaded rather than freeing executable memory that hooks or callbacks may still reference.
+4. `ksud kpm` propagates negative kernel return codes as command failures instead of reporting success.
+5. `ksud kpm doctor --json` reports loader reachability, module count, safe mode and KPM directory hardening.
 
 ## KPM Build Flags
 
@@ -112,6 +124,17 @@ The release build was stress tested with capability KPMs covering:
 8. `500` loops across `5` capability modules, for `2500` total load / control / unload cycles.
 9. Final `kpm num = 0`.
 10. Kernel log clean for `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcode reports and use after free reports.
+
+The current local known-good row is WSA package `2407.40000.4.0` on Windows build `26200` with Memory Integrity enabled. Kernel `#28` (`07cf0130c0f8225e1093a50d2a414612f4fe0020962baf94a1b61e70a42aec1c`) passed:
+
+```bash
+cd KernelSU
+RUN_WSA=1 ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
+  bash scripts/kpm-x86-preflight.sh
+cd ..
+ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
+  bash scripts/wsa-kpm-boot-smoke.sh
+```
 
 ## Open Validation
 

@@ -86,6 +86,14 @@ Expected:
 ReSukiSU-x86_64-KPM-loader/0.20
 ```
 
+For full runtime diagnostics:
+
+```powershell
+adb shell su -c "ksud kpm doctor --json"
+```
+
+This reports loader reachability, loaded module count, safe mode state and `/data/adb/kpm` directory hardening.
+
 ## Rollback
 
 If WSA does not boot or behaves badly:

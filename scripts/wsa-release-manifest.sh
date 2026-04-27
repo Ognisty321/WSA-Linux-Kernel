@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ARTIFACT="${1:-arch/x86/boot/bzImage}"
+
+if [ ! -f "$ARTIFACT" ]; then
+	printf 'artifact not found: %s\n' "$ARTIFACT" >&2
+	exit 1
+fi
+
+kv() {
+	printf '%s=%s\n' "$1" "$2"
+}
+
+kv artifact "$ARTIFACT"
+kv artifact_sha256 "$(sha256sum "$ARTIFACT" | awk '{print $1}')"
+kv generated_utc "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+kv kernel_repo "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+kv kernel_commit "$(git rev-parse HEAD 2>/dev/null || printf unknown)"
+kv kernel_branch "$(git rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
+kv kernel_dirty "$(if [ -n "$(git status --porcelain 2>/dev/null)" ]; then printf true; else printf false; fi)"
+
+if command -v powershell.exe >/dev/null 2>&1; then
+	powershell.exe -NoProfile -NonInteractive -Command '
+$ci = Get-ComputerInfo
+"windows_product=$($ci.WindowsProductName)"
+"windows_version=$($ci.WindowsVersion)"
+"windows_build=$($ci.OsBuildNumber)"
+$hvci = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -ErrorAction SilentlyContinue
+if ($hvci) { "windows_hvci_enabled=$($hvci.Enabled)" }
+$wsa = Get-AppxPackage -Name "MicrosoftCorporationII.WindowsSubsystemForAndroid" -ErrorAction SilentlyContinue
+if ($wsa) {
+  "wsa_package_full_name=$($wsa.PackageFullName)"
+  "wsa_package_version=$($wsa.Version)"
+  "wsa_install_location=$($wsa.InstallLocation)"
+}
+' | tr -d '\r'
+fi
+
+if [ -d KernelSU/.git ]; then
+	kv kernelsu_commit "$(git -C KernelSU rev-parse HEAD 2>/dev/null || printf unknown)"
+	kv kernelsu_branch "$(git -C KernelSU rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
+	kv kernelsu_dirty "$(if [ -n "$(git -C KernelSU status --porcelain 2>/dev/null)" ]; then printf true; else printf false; fi)"
+	if [ -f KernelSU/userspace/ksud/target/x86_64-linux-android/release/ksud ]; then
+		kv ksud_x86_64_android_release "KernelSU/userspace/ksud/target/x86_64-linux-android/release/ksud"
+		kv ksud_x86_64_android_release_sha256 \
+			"$(sha256sum KernelSU/userspace/ksud/target/x86_64-linux-android/release/ksud | awk '{print $1}')"
+	fi
+fi
+
+if [ -f .config ]; then
+	kv kernel_release "$(make ARCH=x86_64 LLVM=1 -s kernelrelease 2>/dev/null || printf unknown)"
+	printf 'config_sha256=%s\n' "$(sha256sum .config | awk '{print $1}')"
+	grep -E '^CONFIG_(LOCALVERSION|KSU|KPM|KALLSYMS|DEBUG_WX|KASAN|KCSAN|KFENCE|PROVE_LOCKING)=' .config | sort
+fi
+
+kv clang "$({ clang --version 2>/dev/null || true; } | sed -n '1p')"
+kv ld_lld "$({ ld.lld --version 2>/dev/null || true; } | sed -n '1p')"
+kv rustc "$({ rustc --version 2>/dev/null || true; } | sed -n '1p')"
+kv cargo "$({ cargo --version 2>/dev/null || true; } | sed -n '1p')"

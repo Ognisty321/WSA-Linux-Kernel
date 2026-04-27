@@ -21,6 +21,7 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 | Build number | `#20` |
 | Architecture | `x86_64` |
 | KPM loader | `ReSukiSU-x86_64-KPM-loader/0.20` |
+| x86_64 KPM ABI | `1` |
 | Kernel SHA256 | `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f` |
 
 ## Quick Start
@@ -30,6 +31,7 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 3. Replace `Tools\kernel` inside your unpacked WSA package and re-register the WSA appx.
 4. Boot WSA and run `adb shell uname -a`. The kernel string must contain `WSA-ReSukiSU+`.
 5. Open ReSukiSU Manager and confirm `KPM Version: Supported (ReSukiSU-x86_64-KPM-loader/0.20)`.
+6. For deeper diagnostics, run `adb shell su -c "ksud kpm doctor --json"`.
 
 Detailed step by step install for Windows is in [docs/INSTALL.md](docs/INSTALL.md).
 
@@ -90,6 +92,7 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 | [docs/FAQ.md](docs/FAQ.md) | Common questions and recovery steps. |
 | [CHANGELOG.md](CHANGELOG.md) | Release history. |
 | `KernelSU/` | Submodule pointing at the matching [`Ognisty321/ReSukiSU`](https://github.com/Ognisty321/ReSukiSU) branch. |
+| `KernelSU/docs/KPM_X86_64_ABI.md` | Formal x86_64 KPM ABI contract. |
 | `KernelSU/kernel/kpm/kpm_loader_x86_64.c` | Main x86_64 KPM loader. |
 | `KernelSU/kernel/hook/x86_64/patch_memory.c` | x86_64 text patching backend. |
 | `fs/susfs.c`, `include/linux/susfs*.h` | SUSFS integration. |
@@ -101,7 +104,7 @@ The stock WSA configuration does not enable `KASAN`, `KCSAN`, `DEBUG_WX`, `IBT`,
 
 ## Reporting Issues
 
-If something is broken, please open an issue in the [issue tracker](https://github.com/Ognisty321/WSA-Linux-Kernel/issues) using one of the templates. Include `adb shell uname -a`, the output of `adb shell su -c ksud kpm version`, and the relevant `dmesg` slice.
+If something is broken, please open an issue in the [issue tracker](https://github.com/Ognisty321/WSA-Linux-Kernel/issues) using one of the templates. Include `adb shell uname -a`, `adb shell su -c "ksud kpm version"`, `adb shell su -c "ksud kpm doctor --json"` and the relevant `dmesg` slice.
 
 ## Credits
 

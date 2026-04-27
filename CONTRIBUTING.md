@@ -15,8 +15,9 @@ Use the [bug report template](https://github.com/Ognisty321/WSA-Linux-Kernel/iss
 1. WSA version.
 2. `adb shell uname -a` output.
 3. `adb shell su -c "ksud kpm version"` output.
-4. Relevant `dmesg` slice.
-5. Whether Memory Integrity was on or off on the host.
+4. `adb shell su -c "ksud kpm doctor --json"` output.
+5. Relevant `dmesg` slice.
+6. Whether Memory Integrity was on or off on the host.
 
 ## Proposing Changes
 

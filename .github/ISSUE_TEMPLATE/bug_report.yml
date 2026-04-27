@@ -39,6 +39,14 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: kpm_doctor
+    attributes:
+      label: Output of `adb shell su -c "ksud kpm doctor --json"`
+      render: json
+    validations:
+      required: true
+
   - type: dropdown
     id: hvci
     attributes:

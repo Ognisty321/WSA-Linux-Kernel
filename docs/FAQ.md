@@ -14,7 +14,8 @@ Manager only checks transport reachability and the loader version. A green `Supp
 
 1. Run `adb shell su -c "ksud kpm list"` and confirm your module is loaded.
 2. Run `adb shell su -c "ksud kpm info <name>"` and confirm metadata.
-3. Run `adb shell su -c "dmesg | tail -200"` and look for `kpm:` lines from the loader.
+3. Run `adb shell su -c "ksud kpm doctor --json"` and check loader, module count and KPM directory state.
+4. Run `adb shell su -c "dmesg | tail -200"` and look for `kpm:` lines from the loader.
 
 ## How do I disable Memory Integrity (HVCI) on Windows?
 
@@ -47,6 +48,7 @@ If you did not make a backup, reinstall WSA from your original source.
 adb connect 127.0.0.1:58526
 adb shell uname -a
 adb shell su -c "ksud kpm version"
+adb shell su -c "ksud kpm doctor --json"
 ```
 
 The kernel string must contain `WSA-ReSukiSU+`. The KPM version must read `ReSukiSU-x86_64-KPM-loader/0.20`.
@@ -62,8 +64,9 @@ Open a [bug report](https://github.com/Ognisty321/WSA-Linux-Kernel/issues/new/ch
 1. WSA version.
 2. Output of `adb shell uname -a`.
 3. Output of `adb shell su -c "ksud kpm version"`.
-4. Relevant `dmesg` slice.
-5. Whether Memory Integrity was on or off on the host.
+4. Output of `adb shell su -c "ksud kpm doctor --json"`.
+5. Relevant `dmesg` slice.
+6. Whether Memory Integrity was on or off on the host.
 
 ## Why is direct syscall hook install disabled?
 

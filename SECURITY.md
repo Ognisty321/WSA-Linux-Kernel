@@ -12,7 +12,8 @@ If you believe you have found a security vulnerability in this kernel or KPM por
 
 1. Open a private security advisory at <https://github.com/Ognisty321/WSA-Linux-Kernel/security/advisories/new>.
 2. Include a clear description, a minimal reproduction, the kernel SHA256 you tested and the WSA version.
-3. Allow a reasonable time for a fix before any public disclosure.
+3. Include `ksud kpm doctor --json`, `adb shell uname -a` and the relevant `dmesg` lines when possible.
+4. Allow a reasonable time for a fix before any public disclosure.
 
 ## What Is In Scope
 
@@ -20,6 +21,7 @@ If you believe you have found a security vulnerability in this kernel or KPM por
 2. Privilege escalation paths in the supercall / `ksud kpm` interface.
 3. KPM loader parser bugs reachable from a crafted `.kpm` file.
 4. Hook restore correctness bugs that can leave kernel text in an inconsistent state.
+5. Userspace command bugs that report success after a kernel-side KPM failure.
 
 ## What Is Out Of Scope
 
