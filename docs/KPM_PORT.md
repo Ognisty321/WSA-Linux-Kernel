@@ -125,7 +125,7 @@ The release build was stress tested with capability KPMs covering:
 9. Final `kpm num = 0`.
 10. Kernel log clean for `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcode reports and use after free reports.
 
-The current local known-good row is WSA package `2407.40000.4.0` on Windows build `26200` with Memory Integrity enabled. Kernel `#28` (`07cf0130c0f8225e1093a50d2a414612f4fe0020962baf94a1b61e70a42aec1c`) passed:
+The current local known-good row is WSA package `2407.40000.4.0` on Windows build `26200` with Memory Integrity enabled. Kernel `#30` (`037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`) passed:
 
 ```bash
 cd KernelSU

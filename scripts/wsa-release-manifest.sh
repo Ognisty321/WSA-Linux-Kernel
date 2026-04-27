@@ -18,6 +18,7 @@ kv generated_utc "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 kv kernel_repo "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 kv kernel_commit "$(git rev-parse HEAD 2>/dev/null || printf unknown)"
 kv kernel_branch "$(git rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
+kv kernel_tag "$(git describe --tags --exact-match 2>/dev/null || printf untagged)"
 kv kernel_dirty "$(if [ -n "$(git status --porcelain 2>/dev/null)" ]; then printf true; else printf false; fi)"
 
 if command -v powershell.exe >/dev/null 2>&1; then
@@ -41,6 +42,17 @@ if [ -d KernelSU/.git ]; then
 	kv kernelsu_commit "$(git -C KernelSU rev-parse HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_branch "$(git -C KernelSU rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_dirty "$(if [ -n "$(git -C KernelSU status --porcelain 2>/dev/null)" ]; then printf true; else printf false; fi)"
+	if [ -f KernelSU/kernel/kpm/kpm_loader_x86_64.h ]; then
+		loader_name="$(sed -n 's/^#define SUKISU_KPM_LOADER_NAME "\(.*\)"/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"
+		loader_semver="$(sed -n 's/^#define SUKISU_KPM_LOADER_SEMVER "\(.*\)"/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"
+		loader_abi="$(sed -n 's/^#define SUKISU_KPM_X86_64_ABI_VERSION \([0-9][0-9]*\)$/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"
+		if [ -n "$loader_name" ] && [ -n "$loader_semver" ]; then
+			kv kpm_loader "$loader_name/$loader_semver"
+		fi
+		if [ -n "$loader_abi" ]; then
+			kv kpm_x86_64_abi "$loader_abi"
+		fi
+	fi
 	if [ -f KernelSU/userspace/ksud/target/x86_64-linux-android/release/ksud ]; then
 		kv ksud_x86_64_android_release "KernelSU/userspace/ksud/target/x86_64-linux-android/release/ksud"
 		kv ksud_x86_64_android_release_sha256 \

@@ -53,6 +53,8 @@ adb shell su -c "ksud kpm doctor --json"
 
 The kernel string must contain `WSA-ReSukiSU+`. The KPM version must read `ReSukiSU-x86_64-KPM-loader/0.20`.
 
+The `0.20` value is the x86_64 KPM loader runtime/ABI marker. It can stay unchanged across WSA kernel release tags such as `wsa-x86_64-kpm-v0.21`.
+
 ## Can I use this kernel with a different WSA build?
 
 The release was built and tested against WSA 2407 style `5.15.104` x86_64. Other WSA builds may have different `bzImage` boot expectations and need their own validation. Building from source against a matching WSA tree is the right path.

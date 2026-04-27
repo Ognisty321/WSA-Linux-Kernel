@@ -4,6 +4,24 @@ All notable changes to this WSA x86_64 ReSukiSU + SUSFS + KPM kernel are documen
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [v0.21] - 2026-04-27
+
+### Changed
+
+1. Refreshed the WSA x86_64 KPM release artifact and provenance metadata.
+2. Advanced the WSA kernel release tag to `wsa-x86_64-kpm-v0.21`.
+3. Pinned the public release to WSA kernel commit `84a389e01` and ReSukiSU submodule commit `a0d26e23`.
+4. Kept the KPM loader marker at `ReSukiSU-x86_64-KPM-loader/0.20` because it is the loader runtime/ABI marker, not the WSA kernel release number.
+
+### Artifact
+
+1. Kernel: `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+`
+2. Build: `#30`
+3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.20`
+4. Kernel SHA256: `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`
+5. WSA package: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`
+6. Windows build: `26200`, Memory Integrity on
+
 ## [v0.20] - 2026-04-26
 
 ### Added
@@ -41,4 +59,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.20`
 4. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
 
+[v0.21]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21
 [v0.20]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20

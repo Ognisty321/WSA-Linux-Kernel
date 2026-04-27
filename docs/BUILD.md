@@ -43,7 +43,7 @@ arch/x86/boot/bzImage
 strings arch/x86/boot/bzImage | grep -E 'WSA-ReSukiSU|KPM-loader' | head
 ```
 
-You should see the `5.15.104-...-WSA-ReSukiSU+` release string and the `ReSukiSU-x86_64-KPM-loader/0.20` marker.
+You should see the `5.15.104-...-WSA-ReSukiSU+` release string and, on uncompressed images or extracted `vmlinux`, the `ReSukiSU-x86_64-KPM-loader/0.20` marker.
 
 ## Useful Targets
 
@@ -74,7 +74,16 @@ See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for context.
 
 ## Reproducing the Released Binary
 
-The released binary in [`wsa-x86_64-kpm-v0.20`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20) was built with the toolchain above on Ubuntu 22.04 using `make ARCH=x86_64 LLVM=1 -j"$(nproc)" bzImage`. The kernel SHA256 is documented in the release notes. Local rebuild SHA256 may differ if the toolchain version differs.
+The released binary in [`wsa-x86_64-kpm-v0.21`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21) has SHA256 `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`. It corresponds to WSA kernel commit `84a389e01` and ReSukiSU submodule commit `a0d26e23`.
+
+For a local release candidate, generate a manifest immediately after copying the exact kernel binary that will be shipped:
+
+```bash
+scripts/wsa-release-manifest.sh /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.104 \
+  > /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.104.manifest
+```
+
+Keep that manifest next to the binary. If the tree is dirty or the artifact SHA does not match the release notes, do not publish it as a known-good release.
 
 ## Continuous Integration
 

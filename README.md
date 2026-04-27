@@ -16,13 +16,19 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 
 | Field | Value |
 | --- | --- |
-| Tag | [`wsa-x86_64-kpm-v0.20`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20) |
+| Tag | [`wsa-x86_64-kpm-v0.21`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21) |
 | Kernel | `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+` |
-| Build number | `#20` |
+| Build number | `#30` |
 | Architecture | `x86_64` |
 | KPM loader | `ReSukiSU-x86_64-KPM-loader/0.20` |
 | x86_64 KPM ABI | `1` |
-| Kernel SHA256 | `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f` |
+| Kernel SHA256 | `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46` |
+| Kernel commit | `84a389e01` |
+| ReSukiSU submodule | `a0d26e23` |
+| Validated WSA package | `2407.40000.4.0` |
+| Validated Windows build | `26200`, Memory Integrity on |
+
+`ReSukiSU-x86_64-KPM-loader/0.20` is the loader runtime/ABI marker. It is intentionally separate from the WSA kernel release tag.
 
 ## Quick Start
 
