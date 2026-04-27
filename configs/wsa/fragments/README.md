@@ -20,10 +20,17 @@ Use the local checker to produce a kept/dropped symbol report without touching t
 scripts/wsa-validate-config-fragment.sh configs/wsa/fragments/wsa-x86_64-debug.config
 ```
 
+If the KernelSU submodule commit exists only in the local ReSukiSU checkout, point the validation worktree at it before running the checker:
+
+```bash
+git submodule set-url KernelSU /home/ognisty321/Projekty/ReSukiSU
+git -c protocol.file.allow=always submodule update --init --force KernelSU
+```
+
 Set `BUILD=1` to build a validation `bzImage` under `out/wsa-validation/<fragment>/` and generate `BUILD_INFO.txt` plus `SHA256SUMS.txt` for that debug artifact.
 
-Current 5.15.104 WSA base check:
+Current 5.15.104 WSA base check from a clean worktree on 2026-04-27:
 
-1. `wsa-x86_64-debug.config` keeps `DEBUG_WX`, `PROVE_LOCKING`, `DEBUG_LIST`, `DEBUG_KMEMLEAK` and `KFENCE`.
-2. `wsa-x86_64-sanitize.config` keeps `KASAN`, `UBSAN`, `DEBUG_LIST` and `KFENCE`; `KCSAN` is dependency-gated out on this base.
-3. `wsa-x86_64-ibt.config` keeps `LTO_CLANG_THIN`; IBT/CFI/FineIBT symbols are dependency-gated out on this base and still need a newer or differently configured validation kernel.
+1. `wsa-x86_64-debug.config` keeps 22 symbols and drops `CONFIG_FRAME_POINTER`.
+2. `wsa-x86_64-sanitize.config` keeps 9 symbols and drops `CONFIG_KCSAN`, `CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN`, `CONFIG_KCSAN_VERBOSE` and `CONFIG_UBSAN_LOCAL_BOUNDS`.
+3. `wsa-x86_64-ibt.config` keeps 2 symbols and drops `CONFIG_CFI_CLANG`, `CONFIG_CFI_CLANG_SHADOW`, `CONFIG_CFI_PERMISSIVE`, `CONFIG_FINEIBT` and `CONFIG_X86_KERNEL_IBT`.

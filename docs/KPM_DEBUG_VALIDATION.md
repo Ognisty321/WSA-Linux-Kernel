@@ -18,6 +18,13 @@ Build a debug artifact and manifest:
 BUILD=1 scripts/wsa-validate-config-fragment.sh configs/wsa/fragments/wsa-x86_64-debug.config
 ```
 
+When the KernelSU submodule points at a local-only ReSukiSU commit, initialize the validation worktree submodule from the local checkout instead of GitHub:
+
+```bash
+git submodule set-url KernelSU /home/ognisty321/Projekty/ReSukiSU
+git -c protocol.file.allow=always submodule update --init --force KernelSU
+```
+
 Run live KPM validation against a booted WSA instance:
 
 ```bash
@@ -47,6 +54,18 @@ ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
 | ftrace/kprobe/static text coexistence | debug kernel plus negative KPM cases | Reserved targets return guarded hook errors, not partial patching. | Guard code present, expanded negative runtime matrix pending. |
 | IBT/CFI/FineIBT | `wsa-x86_64-ibt.config` or newer validation kernel | `endbr64` behavior is documented and hook refusal is deterministic. | 5.15.104 base drops key IBT/CFI symbols, newer validation kernel needed. |
 | ELF parser fuzzing | `scripts/fuzz-kpm-x86-smoke.sh`, libFuzzer when available | Static malformed seeds, built examples and deterministic ELF header mutations pass under sanitizer or standalone harness. | Standalone smoke passes locally, long libFuzzer run pending. |
+
+## Latest Local Fragment Probe
+
+Clean worktree probe on 2026-04-27, WSA source `b47ee5a82`, ReSukiSU submodule `df6fa3e1`, no in-tree generated config artifacts:
+
+| Fragment | Kept | Dropped |
+| --- | ---: | --- |
+| `wsa-x86_64-debug.config` | 22 | `CONFIG_FRAME_POINTER` |
+| `wsa-x86_64-sanitize.config` | 9 | `CONFIG_KCSAN`, `CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN`, `CONFIG_KCSAN_VERBOSE`, `CONFIG_UBSAN_LOCAL_BOUNDS` |
+| `wsa-x86_64-ibt.config` | 2 | `CONFIG_CFI_CLANG`, `CONFIG_CFI_CLANG_SHADOW`, `CONFIG_CFI_PERMISSIVE`, `CONFIG_FINEIBT`, `CONFIG_X86_KERNEL_IBT` |
+
+The dropped symbols are dependency-gated by the 5.15.104 WSA base, so the stock build remains the target while these fragments define what is available for debug boot validation.
 
 ## Result Template
 
