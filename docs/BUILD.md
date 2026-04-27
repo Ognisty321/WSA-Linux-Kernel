@@ -87,6 +87,16 @@ Keep that manifest next to the binary. If the tree is dirty or the artifact SHA 
 
 The manifest records the kernel artifact SHA256, kernel commit, submodule commit, KPM loader ABI, release `ksud` SHA256 when present, the Manager x86_64 packaging guard hash and the KPM ELF fuzz smoke harness hashes.
 
+Verify the manifest against the artifact and current checkout before publishing:
+
+```bash
+scripts/wsa-verify-release-manifest.sh \
+  /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.104.manifest \
+  /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.104
+```
+
+The verifier checks the artifact SHA256, WSA commit, KernelSU submodule commit and recorded helper script hashes. Use `SKIP_SOURCE=1` only when checking a downloaded artifact outside a matching source checkout.
+
 ## Continuous Integration
 
 Every push to `main`, every tag and every pull request runs the [Build kernel](../../actions/workflows/build.yml) workflow on a GitHub Actions Ubuntu 22.04 runner. The workflow:

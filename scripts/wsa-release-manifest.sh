@@ -12,6 +12,18 @@ kv() {
 	printf '%s=%s\n' "$1" "$2"
 }
 
+git_tracked_dirty() {
+	local repo="${1:-.}"
+
+	git -C "$repo" update-index -q --refresh 2>/dev/null || true
+	if ! git -C "$repo" diff --quiet --ignore-submodules=dirty -- 2>/dev/null ||
+		! git -C "$repo" diff --cached --quiet --ignore-submodules=dirty -- 2>/dev/null; then
+		printf true
+	else
+		printf false
+	fi
+}
+
 kv artifact "$ARTIFACT"
 kv artifact_sha256 "$(sha256sum "$ARTIFACT" | awk '{print $1}')"
 kv generated_utc "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -19,7 +31,7 @@ kv kernel_repo "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 kv kernel_commit "$(git rev-parse HEAD 2>/dev/null || printf unknown)"
 kv kernel_branch "$(git rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
 kv kernel_tag "$(git describe --tags --exact-match 2>/dev/null || printf untagged)"
-kv kernel_dirty "$(if [ -n "$(git status --porcelain 2>/dev/null)" ]; then printf true; else printf false; fi)"
+kv kernel_dirty "$(git_tracked_dirty .)"
 
 if command -v powershell.exe >/dev/null 2>&1; then
 	powershell.exe -NoProfile -NonInteractive -Command '
@@ -41,7 +53,7 @@ fi
 if [ -d KernelSU/.git ]; then
 	kv kernelsu_commit "$(git -C KernelSU rev-parse HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_branch "$(git -C KernelSU rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
-	kv kernelsu_dirty "$(if [ -n "$(git -C KernelSU status --porcelain 2>/dev/null)" ]; then printf true; else printf false; fi)"
+	kv kernelsu_dirty "$(git_tracked_dirty KernelSU)"
 	if [ -f KernelSU/kernel/kpm/kpm_loader_x86_64.h ]; then
 		loader_name="$(sed -n 's/^#define SUKISU_KPM_LOADER_NAME "\(.*\)"/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"
 		loader_semver="$(sed -n 's/^#define SUKISU_KPM_LOADER_SEMVER "\(.*\)"/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"

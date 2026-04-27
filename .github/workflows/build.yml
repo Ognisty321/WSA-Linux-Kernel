@@ -148,6 +148,7 @@ jobs:
           mkdir -p out
           cp arch/x86/boot/bzImage "out/kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}"
           scripts/wsa-release-manifest.sh "out/kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}" > out/BUILD_INFO.txt
+          scripts/wsa-verify-release-manifest.sh out/BUILD_INFO.txt "out/kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}"
           (cd out && sha256sum "kernel_resukisu_susfs_kpm_x86_64_${KRELEASE}" > SHA256SUMS.txt)
 
       - name: Build summary
