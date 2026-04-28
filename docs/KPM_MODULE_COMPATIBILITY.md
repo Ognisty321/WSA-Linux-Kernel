@@ -43,13 +43,14 @@ Use the actual module name from `ksud kpm info` when unloading.
 
 | Module | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| `hello_kpm_x86_64` example | `host-pass` | `scripts/check-kpm-module-x86.sh`, `scripts/kpm-x86-preflight.sh` without `RUN_WSA=1`. | Minimal load/unload ABI sample. |
-| `control_kpm` example | `host-pass` | Same example preflight evidence. | Validates `.kpm.ctl0` return handling. |
-| `control_owner` example | `host-pass` | Same example preflight evidence. | Validates ownership tagging from `.kpm.ctl0`. |
-| `inline_hook` example | `host-pass` | Same example preflight evidence. | Validates inline hook install and restore on supported targets. |
-| `fp_hook` example | `host-pass` | Same example preflight evidence. | Validates function pointer hook install and restore. |
-| `hotpatch` example | `host-pass` | Same example preflight evidence. | Validates transactional hotpatch path. |
-| `failure_cases` example | `host-pass` | Same example preflight evidence. | Validates refusal and cleanup paths. |
+| `hello_kpm_x86_64` example | `pass` | `scripts/check-kpm-module-x86.sh`, `RUN_WSA=1 scripts/kpm-x86-preflight.sh`, kernel `#36` SHA256 `f6c7694e5d1c04f063ba6229ddf190634664c62b1fe6c62fbe6c6ec625819af1`. | Minimal load/unload ABI sample. |
+| `control_kpm` example | `pass` | Same live WSA preflight evidence. | Validates `.kpm.ctl0` return handling and control/unload race cleanup. |
+| `control_owner` example | `pass` | Same live WSA preflight evidence. | Validates ownership tagging from `.kpm.ctl0` and unload refusal while a hook is still owned. |
+| `inline_hook` example | `pass` | Same live WSA preflight evidence and clean dmesg scan. | Validates inline hook install, trampoline call and restore on supported targets. |
+| `fp_hook` example | `pass` | Same live WSA preflight evidence and clean dmesg scan. | Validates function pointer hook install and restore. |
+| `hotpatch` example | `pass` | Same live WSA preflight evidence and clean dmesg scan. | Validates transactional hotpatch path. |
+| `failure_cases` example | `pass` | Same live WSA preflight evidence and clean dmesg scan. | Validates refusal and cleanup paths. |
+| `syscall_wrap` example | `pass` | Same live WSA preflight evidence, `syscall_wrap` sample load and native `getpid` trigger. | Validates native x86_64 syscall wrapper install, dispatch and unload. |
 | ARM64-only prebuilt modules | `blocked-arch` | Checker rejects non-x86_64 ELF. | Rebuild from source is required. |
 | Native syscall wrapper modules | `source-candidate` | `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln` are available in loader `0.21`; add live WSA evidence per module. | Compat syscall wrapping remains unsupported. |
 | Compat syscall hook modules | `blocked-abi` | Compat syscall wrapper calls return `EOPNOTSUPP`. | WSA x86_64 does not expose a compat syscall wrapper backend. |

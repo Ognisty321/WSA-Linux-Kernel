@@ -146,7 +146,7 @@ The current local known-good row is WSA package `2407.40000.4.0` on Windows buil
 ```bash
 cd KernelSU
 RUN_WSA=1 ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
-  KSUD=/data/local/tmp/ksud.kpm-capable REMOTE_DIR=/data/local/tmp/kpm-test CONTROL_LOOPS=20 \
+  KSUD=/data/adb/ksud REMOTE_DIR=/data/local/tmp/kpm-test CONTROL_LOOPS=20 \
   bash scripts/kpm-x86-preflight.sh
 cd ..
 ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \

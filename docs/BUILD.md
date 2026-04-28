@@ -25,6 +25,42 @@ git checkout main
 git submodule update --init --recursive
 ```
 
+## Configure the Kernel
+
+Start from the WSA x64 config and enable the ReSukiSU, SUSFS and KPM options used by CI:
+
+```bash
+cp configs/wsa/config-wsa-x64 .config
+
+./scripts/config --file .config --set-str LOCALVERSION '-WSA-ReSukiSU'
+
+./scripts/config --file .config \
+  -e KSU \
+  -d KSU_DEBUG \
+  -e KSU_SUSFS \
+  -d KSU_TRACEPOINT_HOOK \
+  -d KSU_MANUAL_HOOK \
+  -e KPM \
+  -e KALLSYMS \
+  -e KALLSYMS_ALL \
+  -e KSU_SUSFS_SUS_PATH \
+  -e KSU_SUSFS_SUS_MOUNT \
+  -e KSU_SUSFS_SUS_KSTAT \
+  -e KSU_SUSFS_SPOOF_UNAME \
+  -e KSU_SUSFS_ENABLE_LOG \
+  -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
+  -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
+  -e KSU_SUSFS_OPEN_REDIRECT \
+  -e KSU_SUSFS_SUS_MAP \
+  -e NAMESPACES -e NET_NS -e USER_NS -e PID_NS -e UTS_NS -e IPC_NS \
+  -e CGROUPS -e MEMCG -e CGROUP_PIDS -e CGROUP_BPF \
+  -e OVERLAY_FS \
+  -e NETFILTER_XT_TARGET_MASQUERADE -e NF_NAT \
+  -e IP_NF_NAT -e IP_NF_TARGET_MASQUERADE
+
+make ARCH=x86_64 LLVM=1 olddefconfig
+```
+
 ## Build the Kernel
 
 ```bash

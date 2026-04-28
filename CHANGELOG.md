@@ -28,6 +28,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 4. Updated README, build, install, FAQ, KPM porting, module compatibility and known-good archive documentation around the `0.20` published loader marker versus the current `0.21` source marker.
 5. Updated the WSA compatibility matrix for the local `D:\WSA` install on Windows build `26200` with Memory Integrity enabled.
 6. Clarified that Manager support requires an x86_64 `ksud kpm` userspace path, not only a KPM-capable kernel.
+7. Refreshed build, module compatibility and debug validation docs to mark the exact WSA config flow, sample KPM live WSA pass and installed `/data/adb/ksud` validation.
 
 ### Fixed
 
