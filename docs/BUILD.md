@@ -43,7 +43,7 @@ arch/x86/boot/bzImage
 strings arch/x86/boot/bzImage | grep -E 'WSA-ReSukiSU|KPM-loader' | head
 ```
 
-You should see the `5.15.104-...-WSA-ReSukiSU+` release string and, on uncompressed images or extracted `vmlinux`, the `ReSukiSU-x86_64-KPM-loader/0.20` marker.
+You should see the `5.15.104-...-WSA-ReSukiSU+` release string and, on uncompressed images or extracted `vmlinux`, the `ReSukiSU-x86_64-KPM-loader/0.21` marker.
 
 ## Useful Targets
 

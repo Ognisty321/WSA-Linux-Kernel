@@ -4,6 +4,16 @@ All notable changes to this WSA x86_64 ReSukiSU + SUSFS + KPM kernel are documen
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+1. Bumped the current `main` KPM loader marker to `ReSukiSU-x86_64-KPM-loader/0.21` for the native x86_64 syscall wrapper ABI.
+
+### Added
+
+1. Native x86_64 syscall-table wrapper backend for `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln`; compat syscall wrapping remains unsupported.
+
 ## [v0.21] - 2026-04-27
 
 ### Changed

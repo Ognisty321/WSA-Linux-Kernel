@@ -29,16 +29,17 @@ Implemented:
 8. `synchronize_rcu_tasks_rude()` plus `synchronize_rcu_tasks()` before generated executable buffers are freed.
 9. Refusal of unsafe or conflicting hook targets owned by ftrace, kprobes, alternatives, jump labels or static calls.
 10. Refusal of patching from IRQ or atomic context.
+11. Native x86_64 syscall-table wrappers through `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln`.
 
 Intentionally not implemented in this release:
 
-1. Direct syscall hook install. Wrapper symbols `hook_syscalln`, `fp_wrap_syscalln`, `inline_wrap_syscalln`, `syscalln_addr` exist but install calls return `EOPNOTSUPP`.
+1. Compat syscall-table wrapping; compat syscall install calls return `EOPNOTSUPP`.
 2. ARM64 branch helper APIs (`branch_from_to`, `branch_relative`, `branch_absolute`, `ret_absolute`).
 3. ARM64 `kpimg` style boot time patching of the kernel image.
 
 ## Loader ABI
 
-The formal x86_64 ABI contract is in [`KernelSU/docs/KPM_X86_64_ABI.md`](../KernelSU/docs/KPM_X86_64_ABI.md). The current loader marker is `ReSukiSU-x86_64-KPM-loader/0.20` with ABI version `1`.
+The formal x86_64 ABI contract is in [`KernelSU/docs/KPM_X86_64_ABI.md`](../KernelSU/docs/KPM_X86_64_ABI.md). The current loader marker is `ReSukiSU-x86_64-KPM-loader/0.21` with ABI version `1`.
 
 Patch hygiene and rebase rules are in [`KernelSU/docs/UPSTREAMING_X86_64.md`](../KernelSU/docs/UPSTREAMING_X86_64.md).
 
@@ -126,7 +127,7 @@ Rationale:
 
 ## Validation Done
 
-The release build was stress tested with capability KPMs covering:
+The x86_64 validation suite covers:
 
 1. Basic KPM ABI (`load`, `info`, `control`, `unload`).
 2. Hotpatch and function pointer hook capability checks.
@@ -134,17 +135,18 @@ The release build was stress tested with capability KPMs covering:
 4. `hook_wrap` and `fp_hook_wrap` checks for argument counts up to 12.
 5. x86_64 instruction relocation cases including RIP relative MOV / LEA, ENDBR64, 10 byte `movabs`, refusal of `call rel32` and short branches in the prologue.
 6. Malformed `.kpm.info` rejection.
-7. Unsupported syscall hook rejection.
+7. Native syscall wrapper load/unload and compat syscall rejection.
 8. Hook ownership tagging from a `.kpm.ctl0` callback.
 9. `500` loops across `5` capability modules, for `2500` total load / control / unload cycles.
 10. Final `kpm num = 0`.
 11. Kernel log clean for `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcode reports and use after free reports.
 
-The current local known-good row is WSA package `2407.40000.4.0` on Windows build `26200` with Memory Integrity enabled. Kernel `#30` (`037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`) passed:
+The current local known-good row is WSA package `2407.40000.4.0` on Windows build `26200` with Memory Integrity enabled. Kernel `#36` (`f6c7694e5d1c04f063ba6229ddf190634664c62b1fe6c62fbe6c6ec625819af1`) passed with loader `ReSukiSU-x86_64-KPM-loader/0.21`:
 
 ```bash
 cd KernelSU
 RUN_WSA=1 ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \
+  KSUD=/data/local/tmp/ksud.kpm-capable REMOTE_DIR=/data/local/tmp/kpm-test CONTROL_LOOPS=20 \
   bash scripts/kpm-x86-preflight.sh
 cd ..
 ADB="/mnt/d/Programy/Path Tools/adb.exe" ADB_TARGET=127.0.0.1:58526 \

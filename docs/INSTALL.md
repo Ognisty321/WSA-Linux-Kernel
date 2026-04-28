@@ -80,11 +80,13 @@ Or from `adb`:
 adb shell su -c "ksud kpm version"
 ```
 
-Expected:
+Expected for the published `v0.21` binary:
 
 ```text
 ReSukiSU-x86_64-KPM-loader/0.20
 ```
+
+For a local `main` source build, use the `kpm_loader=` value in the sidecar manifest; current source builds report `ReSukiSU-x86_64-KPM-loader/0.21`.
 
 For full runtime diagnostics:
 

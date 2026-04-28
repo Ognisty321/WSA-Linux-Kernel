@@ -28,7 +28,7 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 | Validated WSA package | `2407.40000.4.0` |
 | Validated Windows build | `26200`, Memory Integrity on |
 
-`ReSukiSU-x86_64-KPM-loader/0.20` is the loader runtime/ABI marker. It is intentionally separate from the WSA kernel release tag.
+The published `wsa-x86_64-kpm-v0.21` binary reports `ReSukiSU-x86_64-KPM-loader/0.20`. Current `main` source builds report `ReSukiSU-x86_64-KPM-loader/0.21`; use `scripts/wsa-release-manifest.sh` next to every candidate binary so the release tag, source commit, submodule commit and loader marker stay tied to the exact artifact.
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 2. Verify SHA256 against the value above.
 3. Replace `Tools\kernel` inside your unpacked WSA package and re-register the WSA appx.
 4. Boot WSA and run `adb shell uname -a`. The kernel string must contain `WSA-ReSukiSU+`.
-5. Open ReSukiSU Manager and confirm `KPM Version: Supported (ReSukiSU-x86_64-KPM-loader/0.20)`.
+5. Open ReSukiSU Manager and confirm the KPM marker for the artifact you installed: `ReSukiSU-x86_64-KPM-loader/0.20` for the published `v0.21` binary, or the manifest value for a local source build.
 6. For deeper diagnostics, run `adb shell su -c "ksud kpm doctor --json"`.
 
 Detailed step by step install for Windows is in [docs/INSTALL.md](docs/INSTALL.md).
@@ -74,11 +74,11 @@ Full technical write up of the port is in [docs/KPM_PORT.md](docs/KPM_PORT.md). 
 1. WSA 2407 style `5.15.104` x86_64 is the tested target.
 2. ARM64 `.kpm` binaries cannot load on this kernel.
 3. KPMs with C source can be ported to x86_64 if they avoid ARM64 assembly, ARM64 syscall numbers, ARM64 system registers and ARM64 branch helpers. Recommended build flags are in [docs/KPM_PORT.md](docs/KPM_PORT.md#kpm-build-flags), with the longer checklist in [KernelSU/docs/KPM_X86_64_PORTING.md](KernelSU/docs/KPM_X86_64_PORTING.md).
-4. Direct syscall hook install is intentionally not exposed in this release. The wrapper symbols are present for compatibility, but install calls return `EOPNOTSUPP`.
+4. Native x86_64 syscall wrappers are available through `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln`; compat syscall wrapping still returns `EOPNOTSUPP`.
 
 ## Validation
 
-The release build was stress tested with capability KPMs covering basic KPM ABI, hotpatch, function pointer hook, inline hook, trampoline restore, `hook_wrap`, `fp_hook_wrap`, x86_64 instruction relocation cases, malformed metadata rejection and unsupported syscall hook rejection.
+The x86_64 validation suite covers basic KPM ABI, hotpatch, function pointer hook, inline hook, trampoline restore, `hook_wrap`, `fp_hook_wrap`, x86_64 instruction relocation cases, malformed metadata rejection and native syscall wrapper load/unload and compat syscall rejection.
 
 ```text
 500 loops x 5 modules = 2500 load/control/unload cycles

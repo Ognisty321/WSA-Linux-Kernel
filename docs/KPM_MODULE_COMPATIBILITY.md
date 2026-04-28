@@ -51,7 +51,8 @@ Use the actual module name from `ksud kpm info` when unloading.
 | `hotpatch` example | `host-pass` | Same example preflight evidence. | Validates transactional hotpatch path. |
 | `failure_cases` example | `host-pass` | Same example preflight evidence. | Validates refusal and cleanup paths. |
 | ARM64-only prebuilt modules | `blocked-arch` | Checker rejects non-x86_64 ELF. | Rebuild from source is required. |
-| Direct syscall hook modules | `blocked-abi` | `hook_syscalln`, `fp_wrap_syscalln`, `inline_wrap_syscalln` return `EOPNOTSUPP`. | Wrapper symbols exist for compatibility, but install is intentionally refused. |
+| Native syscall wrapper modules | `source-candidate` | `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln` are available in loader `0.21`; add live WSA evidence per module. | Compat syscall wrapping remains unsupported. |
+| Compat syscall hook modules | `blocked-abi` | Compat syscall wrapper calls return `EOPNOTSUPP`. | WSA x86_64 does not expose a compat syscall wrapper backend. |
 | Phone vendor driver modules | `blocked-wsa` | WSA does not ship the target vendor drivers. | Examples include modules built around device-specific battery, display, freezer or SoC drivers. |
 
 ## Row Template
