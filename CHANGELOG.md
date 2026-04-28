@@ -19,6 +19,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 9. x86_64 KPM security issue template and reporting requirements for WSA-specific loader, module and Manager reports.
 10. Expanded KPM ELF fuzz smoke corpus plus recorded fuzz harness provenance in release manifests.
 11. x86_64 KPM patch hygiene and upstreaming documentation for future ReSukiSU rebases.
+12. Release gate documentation for artifact, Manager, `ksud kpm doctor --json`, `ksud kpm audit --json`, live smoke and debug-validation evidence.
+13. KPM autoload trust-policy design for future hash allowlisting, trust commands and crash-loop recovery.
+14. Documentation consistency CI for ABI-sensitive KPM fields.
+15. `.gitignore` exceptions for tracked GitHub workflow files.
 
 ### Changed
 
@@ -31,6 +35,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 7. Updated the WSA compatibility matrix for the local `D:\WSA` install on Windows build `26200` with Memory Integrity enabled.
 8. Clarified that Manager support requires an x86_64 `ksud kpm` userspace path, not only a KPM-capable kernel.
 9. Refreshed build, module compatibility and debug validation docs to mark the exact WSA config flow, sample KPM live WSA pass and installed `/data/adb/ksud` validation.
+10. Aligned `docs/KPM_PORT.md` and `KernelSU/docs/WSA_X86_64_KPM.md` with the formal x86_64 ABI by documenting `R_X86_64_PC64` and the `load-file` lifecycle event.
 
 ### Fixed
 
@@ -41,6 +46,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 5. Applied clang-format fixes required by the GitHub runner for the KPM loader sources.
 6. Made live selftests stop with a clear installed-userspace mismatch when `/data/adb/ksud` lacks the `kpm` subcommand.
 7. Made generated executable memory cleanup fail closed when the final `RW+NX` transition fails before `module_memfree()`.
+8. Added a documentation gate to prevent stale `load` event text or missing `R_X86_64_PC64` relocation coverage from reappearing.
 
 ### Verified
 

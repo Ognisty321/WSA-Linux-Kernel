@@ -135,6 +135,8 @@ scripts/wsa-verify-release-manifest.sh \
 
 The verifier checks the artifact SHA256, WSA commit, KernelSU submodule commit and recorded helper script hashes. Use `SKIP_SOURCE=1` only when checking a downloaded artifact outside a matching source checkout.
 
+Before publishing a release, complete the evidence checklist in [RELEASE_GATE.md](RELEASE_GATE.md). A release should not be described as known-good unless the kernel artifact, Manager artifact, Android x86_64 `ksud` or `libksud.so`, loader marker, WSA package and live diagnostics all refer to the same validated state.
+
 ## Continuous Integration
 
 Every push to `main`, every tag and every pull request runs the [Build kernel](../../actions/workflows/build.yml) workflow on a GitHub Actions Ubuntu 22.04 runner. The workflow:
@@ -145,3 +147,5 @@ Every push to `main`, every tag and every pull request runs the [Build kernel](.
 4. Uploads the resulting kernel as a workflow artifact (14 day retention) named `wsa-kernel-x86_64-<run_number>`.
 
 The kernel artifact downloaded from a CI run can be installed exactly the same way as the release binary documented in [INSTALL.md](INSTALL.md). The CI build tag and SHA256 are surfaced in the workflow summary.
+
+Documentation-only changes run the `Documentation checks` workflow. It validates ABI-sensitive text such as the supported x86_64 relocation list, the `load-file` lifecycle event and release gate requirements without starting a full kernel build.

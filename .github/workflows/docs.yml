@@ -1,0 +1,40 @@
+name: Documentation checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'docs/**'
+      - 'scripts/wsa-kpm-doc-consistency.sh'
+      - '.github/workflows/docs.yml'
+      - 'KernelSU/docs/KPM_X86_64_ABI.md'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'docs/**'
+      - 'scripts/wsa-kpm-doc-consistency.sh'
+      - '.github/workflows/docs.yml'
+      - 'KernelSU/docs/KPM_X86_64_ABI.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kpm-docs:
+    name: KPM ABI documentation consistency
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Check documentation consistency
+        run: bash scripts/wsa-kpm-doc-consistency.sh

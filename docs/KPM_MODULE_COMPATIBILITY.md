@@ -62,4 +62,4 @@ Use the actual module name from `ksud kpm info` when unloading.
 | --- | --- | --- | --- |
 | `name` | `source-candidate` | `scripts/check-kpm-module-x86.sh` SHA256 output, WSA package, Windows build, kernel SHA256, `ksud kpm audit --json`, dmesg scan. | Source URL, commit, required symbols and any disabled feature. |
 
-Keep the row tied to one built `.kpm` SHA256. Rebuilds with different compiler flags need a new evidence note.
+Keep the row tied to one built `.kpm` SHA256. Rebuilds with different compiler flags need a new evidence note. If boot-time autoload is used for a real module, also record whether the module is covered by the trust-policy design in [KPM_AUTOLOAD_TRUST.md](KPM_AUTOLOAD_TRUST.md) or is loaded manually for validation only.

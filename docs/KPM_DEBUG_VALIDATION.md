@@ -67,6 +67,8 @@ Clean worktree probe on 2026-04-27, WSA source `b47ee5a82`, ReSukiSU submodule `
 
 The dropped symbols are dependency-gated by the 5.15.104 WSA base, so the stock build remains the target while these fragments define what is available for debug boot validation.
 
+Release notes should link the latest completed rows or state that the row is pending. The release gate in [RELEASE_GATE.md](RELEASE_GATE.md) treats stock WSA validation and debug-kernel validation as separate evidence, so a clean stock smoke run should not be presented as KASAN, KCSAN, DEBUG_WX, lockdep or IBT coverage.
+
 ## Result Template
 
 Append a result row or release note with:
