@@ -26,7 +26,7 @@ Implemented:
 5. x86_64 inline hook backend that uses the kernel `insn` decoder for length and RIP relative fixup.
 6. `text_poke_bp()` based install and restore for normal `JMP rel32` hooks under `text_mutex`.
 7. `RW+NX` to `ROX` page transitions for trampolines and wrapper stubs.
-8. `synchronize_rcu_tasks_rude()` plus `synchronize_rcu_tasks()` before generated executable buffers are freed.
+8. `synchronize_rcu_tasks_rude()` plus `synchronize_rcu_tasks()` before generated executable buffers are freed, with free refused if the final `RW+NX` permission transition fails.
 9. Refusal of unsafe or conflicting hook targets owned by ftrace, kprobes, alternatives, jump labels or static calls.
 10. Refusal of patching from IRQ or atomic context.
 11. Native x86_64 syscall-table wrappers through `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln`.
@@ -78,6 +78,7 @@ Restore:
 1. The patcher acquires `text_mutex`.
 2. `text_poke_bp()` writes the original prologue bytes back. The breakpoint emulation step uses the previous jump bytes so that any in flight CPU continues into the trampoline rather than into a half restored prologue.
 3. `synchronize_rcu_tasks_rude()` and `synchronize_rcu_tasks()` are called before the trampoline pages are freed, so no task can still be running inside them.
+4. Before `module_memfree()`, generated executable buffers are switched back to `RW+NX`. If that transition fails, the loader logs the failure and keeps the allocation resident instead of freeing pages with stale executable permissions.
 
 Far jump fallback:
 
@@ -97,6 +98,7 @@ Refusal predicates at install time include:
 3. If `.kpm.exit` returns an error, the module remains loaded rather than freeing executable memory that hooks or callbacks may still reference.
 4. `ksud kpm` propagates negative kernel return codes as command failures instead of reporting success.
 5. `ksud kpm doctor --json` reports loader reachability, module count, safe mode and KPM directory hardening.
+6. Generated executable memory free is fail-closed: a failed `RW+NX` transition is treated as a hard cleanup error and the buffer is intentionally retained for diagnosis.
 
 ## Manager Packaging
 

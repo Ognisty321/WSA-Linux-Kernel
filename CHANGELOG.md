@@ -23,7 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 1. Bumped the current `main` KPM loader marker to `ReSukiSU-x86_64-KPM-loader/0.21` for the native x86_64 syscall wrapper ABI.
-2. Advanced the `KernelSU` submodule from ReSukiSU `a0d26e23` to `79a5ae91`, including hook hardening, native syscall wrappers, Manager guards, CI formatting fixes and module-context ownership hardening.
+2. Advanced the `KernelSU` submodule from ReSukiSU `a0d26e23` to `8326d60c`, including hook hardening, native syscall wrappers, Manager guards, CI formatting fixes, module-context ownership hardening and generated exec free cleanup hardening.
 3. Expanded release provenance capture with kernel tag, dirty-state flags, Windows build, HVCI state, WSA package metadata, release `ksud` SHA256 and helper-script SHA256 values.
 4. Updated README, build, install, FAQ, KPM porting, module compatibility and known-good archive documentation around the `0.20` published loader marker versus the current `0.21` source marker.
 5. Updated the WSA compatibility matrix for the local `D:\WSA` install on Windows build `26200` with Memory Integrity enabled.
@@ -38,6 +38,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 4. Stabilized ReSukiSU x86_64 ABI and Manager guard CI paths so local and GitHub runner checks use the same expected inputs.
 5. Applied clang-format fixes required by the GitHub runner for the KPM loader sources.
 6. Made live selftests stop with a clear installed-userspace mismatch when `/data/adb/ksud` lacks the `kpm` subcommand.
+7. Made generated executable memory cleanup fail closed when the final `RW+NX` transition fails before `module_memfree()`.
 
 ### Verified
 
