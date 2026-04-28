@@ -50,7 +50,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 4. Fresh live `dmesg` scans were clean for `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcodes and use-after-free markers.
 5. Installed `/data/adb/ksud` was upgraded to a KPM-capable x86_64 build with SHA256 `3f94c8ffaa8e2d030a18f6fc72819dd34ef5c625be31d1c2dcadb672d6f4c833`.
 6. ReSukiSU sync candidate `636c3315` passed host KPM x86_64 preflight, `ksud` `cargo fmt` / `cargo check` / `cargo clippy -D warnings` and `ksuinit` `cargo fmt` / `cargo check` / `cargo clippy -D warnings`.
-7. Local WSA build `#37` with ReSukiSU submodule `636c3315` passed `scripts/wsa-verify-release-manifest.sh`; live WSA runtime validation still needs a separate boot test before release promotion.
+7. Local WSA build `#37` with ReSukiSU submodule `636c3315` passed `scripts/wsa-verify-release-manifest.sh`, booted in `D:\WSA` and passed live WSA KPM preflight plus boot smoke.
 
 ### Artifact
 
@@ -65,6 +65,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 9. Local sync candidate build: `#37`, ReSukiSU submodule commit `636c3315876d`, kernel SHA256 `08112c906f8ef5655005e3589edbb9d5e088f48159e806054f9ebbd55c6814d1`
 10. Sync candidate manifest source state: WSA commit `7b209a6c0196`, dirty because the submodule bump and docs were being prepared; ReSukiSU submodule clean at `636c3315876d`.
 11. Sync candidate package input: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`, Windows build `26200`, Memory Integrity on.
+12. Local WSA backup before installing `#37`: `D:\WSA\Tools\kernel.backup.sync-20260428-145951`.
 
 ## [v0.21] - 2026-04-27
 

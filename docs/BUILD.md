@@ -112,7 +112,7 @@ See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for context.
 
 The released binary in [`wsa-x86_64-kpm-v0.21`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21) has SHA256 `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`. It corresponds to WSA kernel commit `84a389e01` and ReSukiSU submodule commit `a0d26e23`.
 
-The latest local upstream-sync candidate was built from ReSukiSU submodule `636c3315876d`, which merges ReSukiSU upstream `74b9b48b`. The reproducible build script produced kernel build `#37` with SHA256 `08112c906f8ef5655005e3589edbb9d5e088f48159e806054f9ebbd55c6814d1`, and `scripts/wsa-verify-release-manifest.sh` passed for the sidecar manifest. Do not promote that candidate to a release until the rebuilt kernel is booted in WSA and the live KPM smoke checks pass.
+The latest local upstream-sync candidate was built from ReSukiSU submodule `636c3315876d`, which merges ReSukiSU upstream `74b9b48b`. The reproducible build script produced kernel build `#37` with SHA256 `08112c906f8ef5655005e3589edbb9d5e088f48159e806054f9ebbd55c6814d1`; `scripts/wsa-verify-release-manifest.sh`, live WSA KPM preflight and `scripts/wsa-kpm-boot-smoke.sh` passed on the local `D:\WSA` install.
 
 For a local release candidate, generate a manifest immediately after copying the exact kernel binary that will be shipped:
 
