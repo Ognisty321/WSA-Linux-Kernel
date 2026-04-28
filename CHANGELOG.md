@@ -24,11 +24,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 1. Bumped the current `main` KPM loader marker to `ReSukiSU-x86_64-KPM-loader/0.21` for the native x86_64 syscall wrapper ABI.
 2. Advanced the `KernelSU` submodule from ReSukiSU `a0d26e23` to `8326d60c`, including hook hardening, native syscall wrappers, Manager guards, CI formatting fixes, module-context ownership hardening and generated exec free cleanup hardening.
-3. Expanded release provenance capture with kernel tag, dirty-state flags, Windows build, HVCI state, WSA package metadata, release `ksud` SHA256 and helper-script SHA256 values.
-4. Updated README, build, install, FAQ, KPM porting, module compatibility and known-good archive documentation around the `0.20` published loader marker versus the current `0.21` source marker.
-5. Updated the WSA compatibility matrix for the local `D:\WSA` install on Windows build `26200` with Memory Integrity enabled.
-6. Clarified that Manager support requires an x86_64 `ksud kpm` userspace path, not only a KPM-capable kernel.
-7. Refreshed build, module compatibility and debug validation docs to mark the exact WSA config flow, sample KPM live WSA pass and installed `/data/adb/ksud` validation.
+3. Advanced the `KernelSU` submodule from ReSukiSU `8326d60c` to `636c3315`, merging ReSukiSU upstream `74b9b48b` while preserving the WSA x86_64 KPM port.
+4. Pulled in upstream ReSukiSU sucompat static-key gating, restore-boot handling, Manager Compose foundation dependency bump and refreshed `ksud` / `ksuinit` lockfiles.
+5. Expanded release provenance capture with kernel tag, dirty-state flags, Windows build, HVCI state, WSA package metadata, release `ksud` SHA256 and helper-script SHA256 values.
+6. Updated README, build, install, FAQ, KPM porting, module compatibility and known-good archive documentation around the `0.20` published loader marker versus the current `0.21` source marker.
+7. Updated the WSA compatibility matrix for the local `D:\WSA` install on Windows build `26200` with Memory Integrity enabled.
+8. Clarified that Manager support requires an x86_64 `ksud kpm` userspace path, not only a KPM-capable kernel.
+9. Refreshed build, module compatibility and debug validation docs to mark the exact WSA config flow, sample KPM live WSA pass and installed `/data/adb/ksud` validation.
 
 ### Fixed
 
@@ -47,6 +49,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 3. Final live module count stayed at `0` after repeated KPM load / control / unload loops.
 4. Fresh live `dmesg` scans were clean for `BUG`, `WARNING`, `Oops`, general protection faults, invalid opcodes and use-after-free markers.
 5. Installed `/data/adb/ksud` was upgraded to a KPM-capable x86_64 build with SHA256 `3f94c8ffaa8e2d030a18f6fc72819dd34ef5c625be31d1c2dcadb672d6f4c833`.
+6. ReSukiSU sync candidate `636c3315` passed host KPM x86_64 preflight, `ksud` `cargo fmt` / `cargo check` / `cargo clippy -D warnings` and `ksuinit` `cargo fmt` / `cargo check` / `cargo clippy -D warnings`.
+7. Local WSA build `#37` with ReSukiSU submodule `636c3315` passed `scripts/wsa-verify-release-manifest.sh`; live WSA runtime validation still needs a separate boot test before release promotion.
 
 ### Artifact
 
@@ -58,6 +62,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 6. Manifest source state: WSA commit `fb64860b3e8e`, ReSukiSU submodule commit `b7b1e740195d`, both dirty at manifest generation because the validated tree was committed afterward.
 7. WSA package: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`
 8. Windows build: `26200`, Memory Integrity on
+9. Local sync candidate build: `#37`, ReSukiSU submodule commit `636c3315876d`, kernel SHA256 `08112c906f8ef5655005e3589edbb9d5e088f48159e806054f9ebbd55c6814d1`
+10. Sync candidate manifest source state: WSA commit `7b209a6c0196`, dirty because the submodule bump and docs were being prepared; ReSukiSU submodule clean at `636c3315876d`.
+11. Sync candidate package input: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`, Windows build `26200`, Memory Integrity on.
 
 ## [v0.21] - 2026-04-27
 

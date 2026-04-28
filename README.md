@@ -28,7 +28,7 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 | Validated WSA package | `2407.40000.4.0` |
 | Validated Windows build | `26200`, Memory Integrity on |
 
-The published `wsa-x86_64-kpm-v0.21` binary reports `ReSukiSU-x86_64-KPM-loader/0.20`. Current `main` source builds report `ReSukiSU-x86_64-KPM-loader/0.21`; use `scripts/wsa-release-manifest.sh` next to every candidate binary so the release tag, source commit, submodule commit and loader marker stay tied to the exact artifact.
+The published `wsa-x86_64-kpm-v0.21` binary reports `ReSukiSU-x86_64-KPM-loader/0.20`. Current `main` source builds report `ReSukiSU-x86_64-KPM-loader/0.21` and carry the ReSukiSU upstream sync through `74b9b48b` in submodule commit `636c3315`; use `scripts/wsa-release-manifest.sh` next to every candidate binary so the release tag, source commit, submodule commit and loader marker stay tied to the exact artifact.
 
 ## Quick Start
 
