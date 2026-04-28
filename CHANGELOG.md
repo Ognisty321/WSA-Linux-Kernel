@@ -16,6 +16,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 6. KPM autoload recovery documentation and disable marker flow for bad boot-time module sets.
 7. ReSukiSU Manager x86_64 packaging guard documentation and preflight coverage for `libksud.so` carrying the `ksud kpm` path.
 8. x86_64 KPM sample and test coverage for control-owner attribution and syscall wrapper behavior.
+9. x86_64 KPM security issue template and reporting requirements for WSA-specific loader, module and Manager reports.
+10. Expanded KPM ELF fuzz smoke corpus plus recorded fuzz harness provenance in release manifests.
+11. x86_64 KPM patch hygiene and upstreaming documentation for future ReSukiSU rebases.
 
 ### Changed
 
@@ -33,6 +36,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 3. Preserved failed modules as resident when failed init or duplicate registration leaves active hooks or callbacks behind.
 4. Stabilized ReSukiSU x86_64 ABI and Manager guard CI paths so local and GitHub runner checks use the same expected inputs.
 5. Applied clang-format fixes required by the GitHub runner for the KPM loader sources.
+6. Made live selftests stop with a clear installed-userspace mismatch when `/data/adb/ksud` lacks the `kpm` subcommand.
 
 ### Verified
 
@@ -68,6 +72,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 2. Advanced the WSA kernel release tag to `wsa-x86_64-kpm-v0.21`.
 3. Pinned the public release to WSA kernel commit `84a389e01` and ReSukiSU submodule commit `a0d26e23`.
 4. Kept the KPM loader marker at `ReSukiSU-x86_64-KPM-loader/0.20` because it is the loader runtime/ABI marker, not the WSA kernel release number.
+5. Removed the obsolete public `wsa-x86_64-kpm-v0.20` GitHub release and remote tag after publishing the refreshed `v0.21` artifact.
 
 ### Verified
 
@@ -83,7 +88,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 5. WSA package: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`
 6. Windows build: `26200`, Memory Integrity on
 
-## [v0.20] - 2026-04-26
+## v0.20 - 2026-04-26 (withdrawn)
+
+The public GitHub release and tag were withdrawn because they pointed at an outdated `ReSukiSU 0f56456` snapshot and were replaced by the refreshed `wsa-x86_64-kpm-v0.21` release. This entry is kept only as a historical local pre-release record.
 
 ### Added
 
@@ -122,4 +129,3 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 [Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.21...main
 [v0.21]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21
-[v0.20]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.20
