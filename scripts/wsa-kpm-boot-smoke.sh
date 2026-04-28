@@ -28,7 +28,7 @@ cleanup_all() {
 }
 
 adb_shell() {
-	"$ADB" shell "$@"
+	"$ADB" -s "$ADB_TARGET" shell "$@"
 }
 
 adb_su() {
@@ -45,13 +45,13 @@ push_kpm() {
 	fi
 
 	adb_su "mkdir -p '$REMOTE_DIR' && chmod 700 '$REMOTE_DIR'"
-	"$ADB" push "$local_file" "$tmp_file" >/dev/null
+	"$ADB" -s "$ADB_TARGET" push "$local_file" "$tmp_file" >/dev/null
 	adb_su "cp '$tmp_file' '$KPM' && chmod 600 '$KPM'"
 }
 
 log "connecting to $ADB_TARGET"
 "$ADB" connect "$ADB_TARGET" >/dev/null || true
-"$ADB" wait-for-device
+"$ADB" -s "$ADB_TARGET" wait-for-device
 
 log "kernel"
 adb_shell uname -a
