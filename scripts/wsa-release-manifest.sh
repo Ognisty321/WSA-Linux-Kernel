@@ -50,7 +50,7 @@ if ($wsa) {
 ' | tr -d '\r'
 fi
 
-if [ -d KernelSU/.git ]; then
+if git -C KernelSU rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 	kv kernelsu_commit "$(git -C KernelSU rev-parse HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_branch "$(git -C KernelSU rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_dirty "$(git_tracked_dirty KernelSU)"

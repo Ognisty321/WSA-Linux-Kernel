@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [v0.22] - 2026-07-18
+
 ### Added
 
 1. Native x86_64 syscall-table wrapper backend for `hook_syscalln`, `fp_wrap_syscalln` and `inline_wrap_syscalln`; compat syscall wrapping remains unsupported.
@@ -36,6 +38,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 8. Clarified that Manager support requires an x86_64 `ksud kpm` userspace path, not only a KPM-capable kernel.
 9. Refreshed build, module compatibility and debug validation docs to mark the exact WSA config flow, sample KPM live WSA pass and installed `/data/adb/ksud` validation.
 10. Aligned `docs/KPM_PORT.md` and `KernelSU/docs/WSA_X86_64_KPM.md` with the formal x86_64 ABI by documenting `R_X86_64_PC64` and the `load-file` lifecycle event.
+11. Advanced the `KernelSU` submodule from ReSukiSU `22eba308` to `7a18cd81`, merging upstream ReSukiSU through `930f61a6` while preserving the WSA x86_64 KPM port.
+12. Paired the kernel release with ReSukiSU Manager `4.1.0 (35052)` and its Android x86_64 `ksud` build.
 
 ### Fixed
 
@@ -47,6 +51,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 6. Made live selftests stop with a clear installed-userspace mismatch when `/data/adb/ksud` lacks the `kpm` subcommand.
 7. Made generated executable memory cleanup fail closed when the final `RW+NX` transition fails before `module_memfree()`.
 8. Added a documentation gate to prevent stale `load` event text or missing `R_X86_64_PC64` relocation coverage from reappearing.
+9. Synchronized the WSA SUSFS integration with ReSukiSU's deferred `susfs_extra_works` path so the updated kernel links successfully.
+10. Made release provenance detect a checked-out `KernelSU` submodule when `.git` is a file, restoring the ReSukiSU commit, dirty state, KPM loader and ABI fields in `BUILD_INFO.txt`.
 
 ### Verified
 
@@ -57,21 +63,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 5. Installed `/data/adb/ksud` was upgraded to a KPM-capable x86_64 build with SHA256 `3f94c8ffaa8e2d030a18f6fc72819dd34ef5c625be31d1c2dcadb672d6f4c833`.
 6. ReSukiSU sync candidate `636c3315` passed host KPM x86_64 preflight, `ksud` `cargo fmt` / `cargo check` / `cargo clippy -D warnings` and `ksuinit` `cargo fmt` / `cargo check` / `cargo clippy -D warnings`.
 7. Local WSA build `#37` with ReSukiSU submodule `636c3315` passed `scripts/wsa-verify-release-manifest.sh`, booted in `D:\WSA` and passed live WSA KPM preflight plus boot smoke.
+8. ReSukiSU `7a18cd81` passed the full Manager, LKM, `ksud`, KPM ABI, formatting, Clippy and CodeQL workflow set.
+9. WSA GitHub build `#19` passed after synchronizing the SUSFS deferred-work integration with ReSukiSU `7a18cd81`.
 
 ### Artifact
 
-1. Local kernel candidate: `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+`
-2. Build: `#36`
-3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.21`
-4. Kernel SHA256: `f6c7694e5d1c04f063ba6229ddf190634664c62b1fe6c62fbe6c6ec625819af1`
-5. Sidecar manifest SHA256: `9647cd1de0788e2ede8e2af6a4e28d015845e971c96a741a30db5d0c2b2f6991`
-6. Manifest source state: WSA commit `fb64860b3e8e`, ReSukiSU submodule commit `b7b1e740195d`, both dirty at manifest generation because the validated tree was committed afterward.
-7. WSA package: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`
-8. Windows build: `26200`, Memory Integrity on
-9. Local sync candidate build: `#37`, ReSukiSU submodule commit `636c3315876d`, kernel SHA256 `08112c906f8ef5655005e3589edbb9d5e088f48159e806054f9ebbd55c6814d1`
-10. Sync candidate manifest source state: WSA commit `7b209a6c0196`, dirty because the submodule bump and docs were being prepared; ReSukiSU submodule clean at `636c3315876d`.
-11. Sync candidate package input: `MicrosoftCorporationII.WindowsSubsystemForAndroid_2407.40000.4.0_x64__8wekyb3d8bbwe`, Windows build `26200`, Memory Integrity on.
-12. Local WSA backup before installing `#37`: `D:\WSA\Tools\kernel.backup.sync-20260428-145951`.
+1. Release tag: `wsa-x86_64-kpm-v0.22`.
+2. Kernel: `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+`.
+3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.21`, x86_64 ABI `1`.
+4. ReSukiSU submodule: `7a18cd81daa00c1b0870b5eff2d223539b9d5dda`.
+5. Paired Manager: `ReSukiSU_v4.1.0_35052-x86_64-release.apk`.
+6. Exact kernel, manifest, Manager and `ksud` SHA256 values are recorded in the GitHub release generated from the tag workflow.
+7. Live boot validation of the exact tagged artifact is pending; the previous `0.21` loader validation remains the runtime baseline.
 
 ## [v0.21] - 2026-04-27
 
@@ -143,5 +146,6 @@ The public GitHub release and tag were withdrawn because they pointed at an outd
 3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.20`
 4. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
 
-[Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.21...main
+[Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.22...main
+[v0.22]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22
 [v0.21]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21

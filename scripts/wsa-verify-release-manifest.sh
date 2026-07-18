@@ -144,7 +144,7 @@ if [ "$SKIP_SOURCE" != "1" ] && git rev-parse --is-inside-work-tree >/dev/null 2
 	actual_kernel_dirty="$(git_tracked_dirty .)"
 	check_equal kernel_dirty "$expected_kernel_dirty" "$actual_kernel_dirty"
 
-	if [ -d KernelSU/.git ]; then
+	if git -C KernelSU rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 		expected_kernelsu_commit="$(required_value kernelsu_commit)"
 		actual_kernelsu_commit="$(git -C KernelSU rev-parse HEAD)"
 		check_equal kernelsu_commit "$expected_kernelsu_commit" "$actual_kernelsu_commit"
