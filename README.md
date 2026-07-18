@@ -16,27 +16,29 @@ The result is a single WSA kernel where ReSukiSU root, SUSFS hide and KPM module
 
 | Field | Value |
 | --- | --- |
-| Tag | [`wsa-x86_64-kpm-v0.21`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21) |
-| Kernel | `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU+` |
-| Build number | `#30` |
+| Tag | [`wsa-x86_64-kpm-v0.22`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22) |
+| Kernel | `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU` |
+| Build number | `#21` |
 | Architecture | `x86_64` |
-| KPM loader | `ReSukiSU-x86_64-KPM-loader/0.20` |
+| KPM loader | `ReSukiSU-x86_64-KPM-loader/0.21` |
 | x86_64 KPM ABI | `1` |
-| Kernel SHA256 | `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46` |
-| Kernel commit | `84a389e01` |
-| ReSukiSU submodule | `a0d26e23` |
-| Validated WSA package | `2407.40000.4.0` |
-| Validated Windows build | `26200`, Memory Integrity on |
+| Kernel SHA256 | `45337ea3de228f1fd3085b6e4296a7efdc232ebe86f17e8acea689a2541c2202` |
+| Kernel commit | `98613c10c` |
+| ReSukiSU submodule | `7a18cd81` |
+| Runtime baseline WSA package | `2407.40000.4.0` |
+| Runtime baseline Windows build | `26200`, Memory Integrity on |
 
-The published `wsa-x86_64-kpm-v0.21` binary reports `ReSukiSU-x86_64-KPM-loader/0.20`. Current `main` source builds report `ReSukiSU-x86_64-KPM-loader/0.21` and carry the ReSukiSU upstream sync through `74b9b48b` in submodule commit `636c3315`; use `scripts/wsa-release-manifest.sh` next to every candidate binary so the release tag, source commit, submodule commit and loader marker stay tied to the exact artifact.
+The published `wsa-x86_64-kpm-v0.22` binary reports `ReSukiSU-x86_64-KPM-loader/0.21` and pins ReSukiSU `7a18cd81`, including upstream through `930f61a6`. Use `scripts/wsa-release-manifest.sh` next to every candidate binary so the release tag, source commit, submodule commit and loader marker stay tied to the exact artifact.
+
+The exact tagged artifact passed CI build, manifest and paired Manager/`ksud` packaging checks. Live boot validation on WSA is pending; the earlier loader `0.21` WSA run remains the runtime baseline.
 
 ## Quick Start
 
 1. Download the kernel binary from the [latest release](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/latest).
 2. Verify SHA256 against the value above.
 3. Replace `Tools\kernel` inside your unpacked WSA package and re-register the WSA appx.
-4. Boot WSA and run `adb shell uname -a`. The kernel string must contain `WSA-ReSukiSU+`.
-5. Open ReSukiSU Manager and confirm the KPM marker for the artifact you installed: `ReSukiSU-x86_64-KPM-loader/0.20` for the published `v0.21` binary, or the manifest value for a local source build.
+4. Boot WSA and run `adb shell uname -a`. The kernel string must contain `WSA-ReSukiSU`.
+5. Open ReSukiSU Manager and confirm the published `v0.22` KPM marker: `ReSukiSU-x86_64-KPM-loader/0.21`.
 6. For deeper diagnostics, run `adb shell su -c "ksud kpm doctor --json"`.
 
 Detailed step by step install for Windows is in [docs/INSTALL.md](docs/INSTALL.md).

@@ -63,7 +63,7 @@ adb shell uname -a
 Expected output contains:
 
 ```text
-WSA-ReSukiSU+
+WSA-ReSukiSU
 ```
 
 ### 8. Verify KPM is running
@@ -71,7 +71,7 @@ WSA-ReSukiSU+
 In ReSukiSU Manager the KPM Version field should read:
 
 ```text
-Supported (ReSukiSU-x86_64-KPM-loader/0.20)
+Supported (ReSukiSU-x86_64-KPM-loader/0.21)
 ```
 
 Or from `adb`:
@@ -80,13 +80,13 @@ Or from `adb`:
 adb shell su -c "ksud kpm version"
 ```
 
-Expected for the published `v0.21` binary:
+Expected for the published `v0.22` binary:
 
 ```text
-ReSukiSU-x86_64-KPM-loader/0.20
+ReSukiSU-x86_64-KPM-loader/0.21
 ```
 
-For a local `main` source build, use the `kpm_loader=` value in the sidecar manifest; current source builds report `ReSukiSU-x86_64-KPM-loader/0.21`.
+For a local `main` source build, use the `kpm_loader=` value in the sidecar manifest.
 
 For full runtime diagnostics:
 

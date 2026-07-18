@@ -79,7 +79,7 @@ arch/x86/boot/bzImage
 strings arch/x86/boot/bzImage | grep -E 'WSA-ReSukiSU|KPM-loader' | head
 ```
 
-You should see the `5.15.104-...-WSA-ReSukiSU+` release string and, on uncompressed images or extracted `vmlinux`, the `ReSukiSU-x86_64-KPM-loader/0.21` marker.
+You should see the `5.15.104-...-WSA-ReSukiSU` release string (an untagged dirty tree may append `+`) and, on uncompressed images or extracted `vmlinux`, the `ReSukiSU-x86_64-KPM-loader/0.21` marker.
 
 ## Useful Targets
 
@@ -110,9 +110,9 @@ See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for context.
 
 ## Reproducing the Released Binary
 
-The released binary in [`wsa-x86_64-kpm-v0.21`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21) has SHA256 `037b9507707bffca33c56cc421b5ff7085f8ec8b8f3d2abedb93072bdadfae46`. It corresponds to WSA kernel commit `84a389e01` and ReSukiSU submodule commit `a0d26e23`.
+The released binary in [`wsa-x86_64-kpm-v0.22`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22) has SHA256 `45337ea3de228f1fd3085b6e4296a7efdc232ebe86f17e8acea689a2541c2202`. It corresponds to WSA kernel commit `98613c10c4fe` and ReSukiSU submodule commit `7a18cd81daa0`.
 
-The latest local upstream-sync candidate was built from ReSukiSU submodule `636c3315876d`, which merges ReSukiSU upstream `74b9b48b`. The reproducible build script produced kernel build `#37` with SHA256 `08112c906f8ef5655005e3589edbb9d5e088f48159e806054f9ebbd55c6814d1`; `scripts/wsa-verify-release-manifest.sh`, live WSA KPM preflight and `scripts/wsa-kpm-boot-smoke.sh` passed on the local `D:\WSA` install.
+The `v0.22` tag build pins ReSukiSU `7a18cd81daa0`, including upstream through `930f61a6`. GitHub build `#21`, the release manifest verifier and the paired Manager/`ksud` x86_64 packaging guards passed. Live boot validation of the exact tagged artifact remains pending; the earlier local loader `0.21` validation is the runtime baseline.
 
 For a local release candidate, generate a manifest immediately after copying the exact kernel binary that will be shipped:
 

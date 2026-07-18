@@ -73,8 +73,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.21`, x86_64 ABI `1`.
 4. ReSukiSU submodule: `7a18cd81daa00c1b0870b5eff2d223539b9d5dda`.
 5. Paired Manager: `ReSukiSU_v4.1.0_35052-x86_64-release.apk`.
-6. Exact kernel, manifest, Manager and `ksud` SHA256 values are recorded in the GitHub release generated from the tag workflow.
-7. Live boot validation of the exact tagged artifact is pending; the previous `0.21` loader validation remains the runtime baseline.
+6. Tag build: GitHub Actions `#21`, WSA commit `98613c10c4fe35ca4f02f96d8e3adbb417995693`.
+7. Kernel SHA256: `45337ea3de228f1fd3085b6e4296a7efdc232ebe86f17e8acea689a2541c2202`.
+8. `BUILD_INFO.txt` SHA256: `04bb2de7643865274db3b2b24364d846f0335930d1fb32a446edf5ef541ce457`.
+9. Manager x86_64 APK SHA256: `6d9f95ca4a7d96e3db5a784d269954041640c1fc725e8e21dfe95496b33e5b5d`.
+10. Android x86_64 `ksud` SHA256: `2c3f734750fa146b6dac5f05b0645d24a8978f54b641471100cb98236fe5c03b`.
+11. Live boot validation of the exact tagged artifact is pending; the previous `0.21` loader validation remains the runtime baseline.
 
 ## [v0.21] - 2026-04-27
 

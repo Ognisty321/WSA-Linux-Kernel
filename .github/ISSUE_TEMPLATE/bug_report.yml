@@ -35,7 +35,7 @@ body:
     id: kpm_version
     attributes:
       label: Output of `adb shell su -c "ksud kpm version"`
-      placeholder: ReSukiSU-x86_64-KPM-loader/0.20
+      placeholder: ReSukiSU-x86_64-KPM-loader/0.21
     validations:
       required: true
 
