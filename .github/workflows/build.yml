@@ -60,6 +60,16 @@ jobs:
           submodules: recursive
           fetch-depth: 1
 
+      - name: Hydrate and validate ReSukiSU version history
+        run: |
+          set -euo pipefail
+          if [ "$(git -C KernelSU rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C KernelSU fetch --unshallow --tags origin
+          fi
+          resukisu_version="$(scripts/wsa-resukisu-version.sh KernelSU)"
+          echo "ReSukiSU version code: $resukisu_version"
+          echo "RESUKISU_VERSION_CODE=$resukisu_version" >> "$GITHUB_ENV"
+
       - name: Install build dependencies
         run: |
           sudo apt-get update
@@ -96,6 +106,7 @@ jobs:
           set -e
           cp configs/wsa/config-wsa-x64 .config
           ./scripts/config --file .config --set-str LOCALVERSION '-WSA-ReSukiSU'
+          ./scripts/config --file .config --set-str KSU_FULL_NAME_FORMAT '%TAG_NAME%-%COMMIT_SHA%@%REPO_NAME% (%KSU_VERSION%)'
           ./scripts/config --file .config \
             -e KSU \
             -d KSU_DEBUG \
@@ -127,6 +138,14 @@ jobs:
         run: |
           set -e
           make ARCH=x86_64 LLVM=1 CC="ccache clang" -j"$(nproc)" bzImage
+
+      - name: Verify embedded ReSukiSU version
+        run: |
+          set -euo pipefail
+          version_object="$(find KernelSU/kernel -path '*/supercall/dispatch.o' -type f -print -quit)"
+          test -n "$version_object"
+          strings "$version_object" | grep -F "($RESUKISU_VERSION_CODE)"
+          echo "Embedded ReSukiSU version verified: $RESUKISU_VERSION_CODE"
 
       - name: Inspect output
         id: inspect

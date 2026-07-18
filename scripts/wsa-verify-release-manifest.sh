@@ -135,6 +135,25 @@ fi
 actual_artifact_sha="$(sha256sum "$artifact" | awk '{ print $1 }')"
 check_equal artifact_sha256 "$expected_artifact_sha" "$actual_artifact_sha"
 
+expected_kernelsu_shallow="$(required_value kernelsu_shallow)"
+check_equal kernelsu_shallow false "$expected_kernelsu_shallow"
+
+expected_kernelsu_commit_count="$(required_value kernelsu_commit_count)"
+expected_kernelsu_version_code="$(required_value kernelsu_version_code)"
+case "$expected_kernelsu_commit_count:$expected_kernelsu_version_code" in
+	*[!0-9:]*|:*|*:)
+		printf 'invalid ReSukiSU version metadata in manifest\n' >&2
+		exit 1
+		;;
+esac
+calculated_kernelsu_version_code="$((30000 + expected_kernelsu_commit_count + 700))"
+check_equal kernelsu_version_code "$calculated_kernelsu_version_code" "$expected_kernelsu_version_code"
+if [ "$expected_kernelsu_version_code" -lt 35002 ]; then
+	printf 'kernelsu_version_code is below the supported minimum: %s\n' \
+		"$expected_kernelsu_version_code" >&2
+	failures=1
+fi
+
 if [ "$SKIP_SOURCE" != "1" ] && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 	expected_kernel_commit="$(required_value kernel_commit)"
 	actual_kernel_commit="$(git rev-parse HEAD)"
@@ -152,6 +171,15 @@ if [ "$SKIP_SOURCE" != "1" ] && git rev-parse --is-inside-work-tree >/dev/null 2
 		expected_kernelsu_dirty="$(required_value kernelsu_dirty)"
 		actual_kernelsu_dirty="$(git_tracked_dirty KernelSU)"
 		check_equal kernelsu_dirty "$expected_kernelsu_dirty" "$actual_kernelsu_dirty"
+
+		actual_kernelsu_shallow="$(git -C KernelSU rev-parse --is-shallow-repository)"
+		check_equal kernelsu_shallow "$expected_kernelsu_shallow" "$actual_kernelsu_shallow"
+
+		actual_kernelsu_commit_count="$(git -C KernelSU rev-list --count HEAD)"
+		check_equal kernelsu_commit_count "$expected_kernelsu_commit_count" "$actual_kernelsu_commit_count"
+
+		actual_kernelsu_version_code="$((30000 + actual_kernelsu_commit_count + 700))"
+		check_equal kernelsu_version_code "$expected_kernelsu_version_code" "$actual_kernelsu_version_code"
 	fi
 fi
 

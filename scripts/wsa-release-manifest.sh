@@ -54,6 +54,15 @@ if git -C KernelSU rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 	kv kernelsu_commit "$(git -C KernelSU rev-parse HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_branch "$(git -C KernelSU rev-parse --abbrev-ref HEAD 2>/dev/null || printf unknown)"
 	kv kernelsu_dirty "$(git_tracked_dirty KernelSU)"
+	kernelsu_shallow="$(git -C KernelSU rev-parse --is-shallow-repository)"
+	kv kernelsu_shallow "$kernelsu_shallow"
+	if [ "$kernelsu_shallow" = "true" ]; then
+		printf 'cannot generate release metadata from shallow ReSukiSU history\n' >&2
+		exit 1
+	fi
+	kernelsu_commit_count="$(git -C KernelSU rev-list --count HEAD)"
+	kv kernelsu_commit_count "$kernelsu_commit_count"
+	kv kernelsu_version_code "$((30000 + kernelsu_commit_count + 700))"
 	if [ -f KernelSU/kernel/kpm/kpm_loader_x86_64.h ]; then
 		loader_name="$(sed -n 's/^#define SUKISU_KPM_LOADER_NAME "\(.*\)"/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"
 		loader_semver="$(sed -n 's/^#define SUKISU_KPM_LOADER_SEMVER "\(.*\)"/\1/p' KernelSU/kernel/kpm/kpm_loader_x86_64.h)"
