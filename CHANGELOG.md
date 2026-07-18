@@ -6,7 +6,29 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [v0.24] - 2026-07-18
+
+### Fixed
+
+1. Fixed the WSA release workflow reporting ReSukiSU `30701` when the submodule was checked out with a one-commit shallow history.
+2. ReSukiSU kernel and Manager builds now reject shallow Git history instead of silently generating an invalid version code.
+3. ReSukiSU CodeQL and LKM workflows now use full history so every produced kernel, module and APK shares the same version calculation.
+
+### Added
+
+1. Added a WSA CI hydration step and a reusable version guard requiring complete ReSukiSU history and a supported version code.
+2. Embedded the numeric ReSukiSU version in the full kernel version name and added a post-build object check for the exact value.
+3. Added `kernelsu_shallow`, `kernelsu_commit_count` and `kernelsu_version_code` to release manifests, with source and minimum-version verification.
+
+### Verified
+
+1. WSA candidate build `#27` calculated and embedded ReSukiSU `35056`, then passed the enhanced release-manifest verifier.
+2. ReSukiSU Manager build `#18` passed all normal, spoofed, LKM, `ksud` and `ksuinit` jobs for commit `2ad80bf5`.
+3. ReSukiSU CodeQL passed after its checkout was changed to full history.
+
 ## [v0.23] - 2026-07-18
+
+> Superseded: the released kernel reported ReSukiSU `30701` because CI used a shallow submodule checkout. Use `v0.24` or newer.
 
 ### Changed
 
@@ -183,7 +205,8 @@ The public GitHub release and tag were withdrawn because they pointed at an outd
 3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.20`
 4. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
 
-[Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.23...main
+[Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.24...main
+[v0.24]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.24
 [v0.23]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.23
 [v0.22]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22
 [v0.21]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21

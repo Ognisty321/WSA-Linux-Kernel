@@ -9,12 +9,14 @@ A release is valid only when these artifacts are recorded together:
 1. Kernel artifact path, SHA256 and `uname -a` output.
 2. WSA-Linux-Kernel commit and dirty state.
 3. KernelSU/ReSukiSU submodule commit and dirty state.
-4. KPM loader marker and x86_64 ABI version.
-5. Manager artifact version and SHA256.
-6. Android x86_64 `libksud.so` or release `ksud` SHA256.
-7. WSA package full name, Windows build and Memory Integrity state.
+4. ReSukiSU `kernelsu_shallow=false`, commit count and numeric version code.
+5. Matching numeric version code embedded in the kernel and used by the Manager APK.
+6. KPM loader marker and x86_64 ABI version.
+7. Manager artifact version and SHA256.
+8. Android x86_64 `libksud.so` or release `ksud` SHA256.
+9. WSA package full name, Windows build and Memory Integrity state.
 
-Do not publish a release as known-good when the release tag, loader marker, KernelSU submodule, Manager artifact or manifest point at different validation states.
+Do not publish a release as known-good when ReSukiSU history is shallow, or when the release tag, numeric ReSukiSU version, loader marker, KernelSU submodule, Manager artifact or manifest point at different validation states.
 
 ## Required Commands
 
@@ -23,6 +25,7 @@ Generate and verify the sidecar manifest next to the exact kernel file that will
 ```bash
 scripts/wsa-release-manifest.sh /path/to/kernel > /path/to/BUILD_INFO.txt
 scripts/wsa-verify-release-manifest.sh /path/to/BUILD_INFO.txt /path/to/kernel
+scripts/wsa-resukisu-version.sh KernelSU
 ```
 
 Verify the Manager packaging path before pairing it with the kernel:

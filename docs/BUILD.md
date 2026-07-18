@@ -23,6 +23,10 @@ git clone --recurse-submodules https://github.com/Ognisty321/WSA-Linux-Kernel.gi
 cd WSA-Linux-Kernel
 git checkout main
 git submodule update --init --recursive
+if [ "$(git -C KernelSU rev-parse --is-shallow-repository)" = "true" ]; then
+  git -C KernelSU fetch --unshallow --tags origin
+fi
+scripts/wsa-resukisu-version.sh KernelSU
 ```
 
 ## Configure the Kernel
@@ -33,6 +37,8 @@ Start from the WSA x64 config and enable the ReSukiSU, SUSFS and KPM options use
 cp configs/wsa/config-wsa-x64 .config
 
 ./scripts/config --file .config --set-str LOCALVERSION '-WSA-ReSukiSU'
+./scripts/config --file .config --set-str KSU_FULL_NAME_FORMAT \
+  '%TAG_NAME%-%COMMIT_SHA%@%REPO_NAME%-%KSU_VERSION%'
 
 ./scripts/config --file .config \
   -e KSU \
@@ -65,6 +71,9 @@ make ARCH=x86_64 LLVM=1 olddefconfig
 
 ```bash
 make ARCH=x86_64 LLVM=1 -j"$(nproc)" bzImage
+
+resukisu_version="$(scripts/wsa-resukisu-version.sh KernelSU)"
+strings KernelSU/kernel/supercall/dispatch.o | grep -F -- "-$resukisu_version"
 ```
 
 The kernel image is at:
@@ -123,7 +132,7 @@ scripts/wsa-release-manifest.sh /path/to/kernel_resukisu_susfs_kpm_x86_64_5.15.1
 
 Keep that manifest next to the binary. If the tree is dirty or the artifact SHA does not match the release notes, do not publish it as a known-good release.
 
-The manifest records the kernel artifact SHA256, kernel commit, submodule commit, KPM loader ABI, release `ksud` SHA256 when present, the Manager x86_64 packaging guard hash, the KPM module checker hash, the KPM ELF fuzz smoke harness hashes and the WSA manifest/runtime checker hashes.
+The manifest records the kernel artifact SHA256, kernel commit, submodule commit, ReSukiSU shallow state, commit count and version code, KPM loader ABI, release `ksud` SHA256 when present, the Manager x86_64 packaging guard hash, the KPM module checker hash, the KPM ELF fuzz smoke harness hashes and the WSA manifest/runtime checker hashes.
 
 Verify the manifest against the artifact and current checkout before publishing:
 
