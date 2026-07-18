@@ -14,7 +14,7 @@ Tracked module status lives in [KPM_MODULE_COMPATIBILITY.md](KPM_MODULE_COMPATIB
 
 ## ReSukiSU Manager shows `Unsupported` after a Manager update
 
-The Manager ships its own `libksud.so`. After a Manager upgrade, Android may overwrite that library with a stock build that does not handle the `kpm` subcommand on x86_64. The kernel side is unaffected if `adb shell su -c "ksud kpm version"` still returns the marker for your installed artifact; the published `v0.22` binary reports `ReSukiSU-x86_64-KPM-loader/0.21`.
+The Manager ships its own `libksud.so`. After a Manager upgrade, Android may overwrite that library with a stock build that does not handle the `kpm` subcommand on x86_64. The kernel side is unaffected if `adb shell su -c "ksud kpm version"` still returns the marker for your installed artifact; the published `v0.23` binary reports `ReSukiSU-x86_64-KPM-loader/0.21`.
 
 Before reinstalling, check the APK or extracted library:
 
@@ -89,9 +89,9 @@ adb shell su -c "ksud kpm version"
 adb shell su -c "ksud kpm doctor --json"
 ```
 
-The kernel string must contain `WSA-ReSukiSU`. The KPM version must match the installed artifact: `ReSukiSU-x86_64-KPM-loader/0.21` for the published `v0.22` binary, or the `kpm_loader=` value from the sidecar manifest for a local build.
+The kernel string must contain `WSA-ReSukiSU`. The KPM version must match the installed artifact: `ReSukiSU-x86_64-KPM-loader/0.21` for the published `v0.23` binary, or the `kpm_loader=` value from the sidecar manifest for a local build.
 
-The loader marker is separate from WSA kernel release tags such as `wsa-x86_64-kpm-v0.22`.
+The loader marker is separate from WSA kernel release tags such as `wsa-x86_64-kpm-v0.23`.
 
 ## Can I use this kernel with a different WSA build?
 

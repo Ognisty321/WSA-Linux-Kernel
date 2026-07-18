@@ -80,7 +80,7 @@ Or from `adb`:
 adb shell su -c "ksud kpm version"
 ```
 
-Expected for the published `v0.22` binary:
+Expected for the published `v0.23` binary:
 
 ```text
 ReSukiSU-x86_64-KPM-loader/0.21

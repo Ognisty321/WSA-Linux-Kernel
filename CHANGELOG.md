@@ -21,7 +21,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Verified
 
 1. WSA GitHub build `#22` passed with the complete x86_64 ReSukiSU, SUSFS and KPM configuration.
-2. ReSukiSU Manager CI passed after building the normal and spoofed APK variants with the new `arm64-v8a` and `x86_64` helpers.
+2. Tagged WSA GitHub build `#23` passed with the exact release source.
+3. ReSukiSU Manager CI passed after building the normal and spoofed APK variants with the new `arm64-v8a` and `x86_64` helpers.
+
+### Artifact
+
+1. Release tag: `wsa-x86_64-kpm-v0.23`.
+2. Kernel: `5.15.104-windows-subsystem-for-android-20230927-WSA-ReSukiSU`.
+3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.21`, x86_64 ABI `1`.
+4. SUSFS: `v2.2.0`.
+5. ReSukiSU submodule: `092354e5eb274a07b535c79973f695f756ec2c33`.
+6. Paired Manager: `ReSukiSU_v4.1.0_35053-x86_64-release.apk`.
+7. Tag build: GitHub Actions `#23`, WSA commit `329edcc7d9c6cd671b96ec2570632839a4526f30`.
+8. Kernel SHA256: `1bb844874f3b4e88b91f89b4673c257119f4063d9e6207aa5ac5be1c5a1305cd`.
+9. `BUILD_INFO.txt` SHA256: `f923beba2d72d8f76576d016c55219896dce78ba47abb8f9f0d61c254ea488c0`.
+10. Manager x86_64 APK SHA256: `16e9f89748064ef9669e95928822c7b3efc6b310491ac3ce9894dfb00c343090`.
+11. Android x86_64 `ksud` SHA256: `79c178ecaf645f15337dfd59e91184308b12681cf0d5b260bac6fb068412e60e`.
+12. Live boot validation of the exact tagged artifact is pending; the previous `0.21` loader validation remains the runtime baseline.
 
 ## [v0.22] - 2026-07-18
 
@@ -167,7 +183,7 @@ The public GitHub release and tag were withdrawn because they pointed at an outd
 3. KPM loader: `ReSukiSU-x86_64-KPM-loader/0.20`
 4. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
 
-[Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.22...main
+[Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.23...main
 [v0.23]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.23
 [v0.22]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22
 [v0.21]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21

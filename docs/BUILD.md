@@ -110,9 +110,9 @@ See [KPM_PORT.md](KPM_PORT.md#kpm-build-flags) for context.
 
 ## Reproducing the Released Binary
 
-The released binary in [`wsa-x86_64-kpm-v0.22`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22) has SHA256 `45337ea3de228f1fd3085b6e4296a7efdc232ebe86f17e8acea689a2541c2202`. It corresponds to WSA kernel commit `98613c10c4fe` and ReSukiSU submodule commit `7a18cd81daa0`.
+The released binary in [`wsa-x86_64-kpm-v0.23`](https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.23) has SHA256 `1bb844874f3b4e88b91f89b4673c257119f4063d9e6207aa5ac5be1c5a1305cd`. It corresponds to WSA kernel commit `329edcc7d9c6cd671b96ec2570632839a4526f30` and ReSukiSU submodule commit `092354e5eb274a07b535c79973f695f756ec2c33`.
 
-The `v0.22` tag build pins ReSukiSU `7a18cd81daa0`, including upstream through `930f61a6`. GitHub build `#21`, the release manifest verifier and the paired Manager/`ksud` x86_64 packaging guards passed. Live boot validation of the exact tagged artifact remains pending; the earlier local loader `0.21` validation is the runtime baseline.
+The `v0.23` tag build pins ReSukiSU `092354e5eb27` and SUSFS `v2.2.0`. GitHub build `#23`, the release manifest verifier and the paired Manager/`ksud` x86_64 packaging guards passed. Live boot validation of the exact tagged artifact remains pending; the earlier local loader `0.21` validation is the runtime baseline.
 
 For a local release candidate, generate a manifest immediately after copying the exact kernel binary that will be shipped:
 
