@@ -26,6 +26,7 @@
 
 extern bool susfs_is_current_ksu_domain(void);
 extern void setup_selinux(const char *domain, struct cred *cred);
+extern struct cred *ksu_cred;
 
 #ifdef CONFIG_KSU_SUSFS_ENABLE_LOG
 DEFINE_STATIC_KEY_TRUE(susfs_is_log_enabled);
@@ -1446,11 +1447,25 @@ void susfs_start_sdcard_monitor_fn(void) {
 	}
 }
 
+/* Defer the potentially blocking sus-path loop work from the setuid hook. */
+struct work_struct susfs_extra_works;
+
+static void susfs_run_extra_works(struct work_struct *work)
+{
+	if (!ksu_cred)
+		return;
+
+#ifdef CONFIG_KSU_SUSFS_SUS_PATH
+	susfs_run_sus_path_loop();
+#endif
+}
+
 /* susfs_init */
 void susfs_init(void) {
+	SUSFS_LOGI("Initializing susfs_extra_works\n");
+	INIT_WORK(&susfs_extra_works, susfs_run_extra_works);
 	SUSFS_LOGI("susfs is initialized! version: " SUSFS_VERSION " \n");
 }
 
 /* No module exit is needed becuase it should never be a loadable kernel module */
 //void __init susfs_exit(void)
-
