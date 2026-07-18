@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [v0.23] - 2026-07-18
+
 ### Changed
 
 1. Updated the WSA 5.15 SUSFS integration to upstream `v2.2.0` from the `gki-android14-5.15` branch, including the current path-loop, mount-hiding and safe string-copy fixes.
@@ -15,6 +17,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 1. The Manager now chooses the helper matching the device ABI instead of attempting to install the previous ARM64-only helper on WSA x86_64.
+
+### Verified
+
+1. WSA GitHub build `#22` passed with the complete x86_64 ReSukiSU, SUSFS and KPM configuration.
+2. ReSukiSU Manager CI passed after building the normal and spoofed APK variants with the new `arm64-v8a` and `x86_64` helpers.
 
 ## [v0.22] - 2026-07-18
 
@@ -161,5 +168,6 @@ The public GitHub release and tag were withdrawn because they pointed at an outd
 4. Kernel SHA256: `7715bbafba6744ca8f5e091694af60c1e9b38fd08846a85243be691905c4cf8f`
 
 [Unreleased]: https://github.com/Ognisty321/WSA-Linux-Kernel/compare/wsa-x86_64-kpm-v0.22...main
+[v0.23]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.23
 [v0.22]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.22
 [v0.21]: https://github.com/Ognisty321/WSA-Linux-Kernel/releases/tag/wsa-x86_64-kpm-v0.21
