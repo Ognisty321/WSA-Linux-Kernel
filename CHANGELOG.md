@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+1. Updated the WSA 5.15 SUSFS integration to upstream `v2.2.0` from the `gki-android14-5.15` branch, including the current path-loop, mount-hiding and safe string-copy fixes.
+2. Advanced the ReSukiSU submodule to `092354e5`, which supplies the matching SUSFS deferred-work guard and Manager integration.
+3. Added ABI-specific SUSFS `v2.2.0` helpers to the paired Manager: `arm64-v8a` for Android devices and `x86_64` for WSA.
+
+### Fixed
+
+1. The Manager now chooses the helper matching the device ABI instead of attempting to install the previous ARM64-only helper on WSA x86_64.
+
 ## [v0.22] - 2026-07-18
 
 ### Added
